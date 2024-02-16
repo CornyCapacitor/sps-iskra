@@ -15,9 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Navbar />
-      <body className="w-screen max-w-screen min-h-screen m-0 overflow-x-hidden">{children}</body>
-      <Footer />
+      <link rel="icon" href="/sps-iskra-logo.png" />
+      <body className="w-screen max-w-screen min-h-screen m-0 overflow-x-hidden">
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
