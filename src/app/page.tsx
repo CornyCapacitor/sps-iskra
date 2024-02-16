@@ -26,12 +26,8 @@ export default function Home() {
         ))}
       </section>
       <SectionSeparator />
-      <section className="flex items-center justify-center h-[500px]">
-        <span>Coś tam</span>
-      </section>
-      <SectionSeparator />
-      <section className="flex items-center justify-center h-[500px]">
-        <span>Coś tam</span>
+      <section className="flex items-start p-10 justify-center min-h-[500px]">
+        <h1 className="text-3xl">Współpraca</h1>
       </section>
       <Footer />
     </main>
