@@ -1,31 +1,14 @@
 'use client'
 
 import { Navbar } from "@/components/Navbar";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-
+import { PageImage } from "@/components/PageImage";
 
 export default function Home() {
-  const [viewportWidth, setViewPortWidth] = useState(0)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setViewPortWidth(window.innerWidth)
-    };
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
 
   return (
-    <main className="flex-col w-full items-center justify-center text-center">
+    <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
       <Navbar />
-      <Image src="/placeholder-image-main.jpg" alt="Żołnierz w dziczy" width={viewportWidth} height={500} />
+      <PageImage imageUrl={"/placeholder-image-main.jpg"} />
       <h1 className="text-2xl">SPS Iskra</h1>
     </main>
   );
