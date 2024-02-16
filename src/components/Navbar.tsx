@@ -5,7 +5,7 @@ export const Navbar = () => {
   return (
     <nav className="w-full absolute top-5 left-0 flex items-center justify-center">
       <div className="flex w-[95%] h-32 px-5 items-center justify-center text-white gap-3 bg-black opacity-80 rounded-xl">
-        <Image src="/sps-iskra-logo.jpg" alt="Logo SPS Iskra" width={125} height={125} />
+        <Image src="/sps-iskra-logo.jpg" alt="Logo SPS Iskra" width={125} height={125} className="" />
         <div className="flex h-full items-center justify-center">
           <Link href="/" className="nav_link">Start</Link>
           <Link href="/aktualnosci" className="nav_link">Aktualności</Link>
