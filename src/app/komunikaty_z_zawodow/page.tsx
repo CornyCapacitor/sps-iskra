@@ -1,9 +1,13 @@
+import { PageImage } from "@/components/PageImage"
 
 const page = () => {
   return (
-    <div>
-      <p>Komunikaty z zawodów</p>
-    </div>
+    <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
+      <PageImage imageUrl={"/zawody-placeholder.jpg"} />
+      <section className="flex flex-wrap gap-5 items-start justify-center p-10 min-h-[500px]">
+        <h1 className="text-3xl">Komunikaty z zawodów</h1>
+      </section>
+    </main>
   )
 }
 
