@@ -1,5 +1,6 @@
 'use client'
 
+import { Footer } from "@/components/Footer";
 import { HomeCard } from "@/components/HomeCard";
 import { Navbar } from "@/components/Navbar";
 import { PageImage } from "@/components/PageImage";
@@ -32,8 +33,7 @@ export default function Home() {
       <section className="flex items-center justify-center h-[500px]">
         <span>Coś tam</span>
       </section>
-      <SectionSeparator />
-      <footer className="flex items-center justify-center h-[100px]">Footer</footer>
+      <Footer />
     </main>
   );
 }
