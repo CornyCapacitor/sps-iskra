@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <link rel="icon" href="/sps-iskra-logo.png" />
-      <body className="w-screen max-w-screen min-h-screen m-0 overflow-x-hidden">
+      <body className="w-screen max-w-screen min-h-screen m-0 overflow-x-hidden montserrat">
         <Navbar />
         {children}
         <Footer />
