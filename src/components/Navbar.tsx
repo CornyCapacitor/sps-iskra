@@ -32,9 +32,9 @@ export const Navbar = () => {
           <Link href="/" className="nav_link">Start</Link>
           <Link href="/aktualnosci" className="nav_link">Aktualności</Link>
           <Link href="/kalendarz" className="nav_link">Kalendarz</Link>
-          <Link href="/komunikaty_z_zawodow" className="nav_link">Zawody</Link>
+          <Link href="/zawody" className="nav_link">Zawody</Link>
           <Link href="/szkolenia" className="nav_link">Szkolenia</Link>
-          <Link href="/sportowy_klub_strzelecki" className="nav_link">SKS ISKRA</Link>
+          <Link href="/sks_iskra" className="nav_link">SKS ISKRA</Link>
           <Link href="/o_nas" className="nav_link">O nas</Link>
           <Link href="/kontakt" className="nav_link">Kontakt</Link>
         </div>

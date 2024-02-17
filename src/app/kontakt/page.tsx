@@ -2,7 +2,7 @@
 const page = () => {
   return (
     <div>
-      <p>Szkolenia proobronne</p>
+      <p>Kontakt</p>
     </div>
   )
 }

@@ -2,7 +2,7 @@
 const page = () => {
   return (
     <div>
-      <p>Szkolenia dla służb mundurowych</p>
+      <p>Szkolenia</p>
     </div>
   )
 }
