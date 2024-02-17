@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 export const PageImage = ({ imageUrl }: { imageUrl: string }) => {
   const [viewportWidth, setViewPortWidth] = useState(0)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,7 +23,7 @@ export const PageImage = ({ imageUrl }: { imageUrl: string }) => {
 
   return (
     <div className="w-full max-h-[800px] overflow-hidden">
-      <Image src={imageUrl} alt="Żołnierz w dziczy" width={viewportWidth} height={800} />
+      <Image src={imageUrl} alt="Żołnierz w dziczy" width={viewportWidth} height={800} onLoad={() => setImageLoaded(true)} style={{ visibility: imageLoaded ? "visible" : "hidden" }} />
     </div>
   )
 }
