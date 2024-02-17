@@ -44,13 +44,13 @@ export const Navbar = () => {
         {toggleDropdown &&
           <ul className="absolute flex flex-col gap-3 rounded-md bg-gray-900 z-10 min-w-[250px] p-3 mt-2 right-0 text-center dropdown_reveal overflow-hidden">
             <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>Strona główna</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>Aktualności</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>Kalendarz</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>Zawody</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>Szkolenia</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>SKS Iskra</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>O nas</Link>
-            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/"}>Kontakt</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/aktualnosci"}>Aktualności</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/kalendarz"}>Kalendarz</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/zawody"}>Zawody</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/szkolenia"}>Szkolenia</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/sks_iskra"}>SKS Iskra</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/o_nas"}>O nas</Link>
+            <Link className="w-full p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/kontakt"}>Kontakt</Link>
           </ul>
         }
       </div>
