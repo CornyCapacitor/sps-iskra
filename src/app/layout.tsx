@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
+
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import type { Metadata } from "next";
+
+import AuthListener from "@/components/AutListener";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <link rel="icon" href="/sps-iskra-logo.png" />
       <body className="w-screen max-w-screen min-h-screen m-0 overflow-x-hidden montserrat">
+        <AuthListener />
         <Navbar />
         {children}
         <Footer />
