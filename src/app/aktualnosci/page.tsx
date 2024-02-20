@@ -1,25 +1,27 @@
 'use client'
 
-import NewsCard from "@/components/NewsCard"
 import { PageImage } from "@/components/PageImage"
+import { useEffect, useState } from "react"
 
-const page = () => {
-  const news: News[] = [
-    {
-      id: "FC4IB",
-      title: "Założyliśmy stowarzyszenie!",
-      image: null,
-      date: "Jakaś tam data",
-      description: "Oficjalne założenie SPS Iskra!",
-    },
-    {
-      id: "5EMA9",
-      title: "Odpaliliśmy stronę internetową!",
-      image: null,
-      date: "Jakaś tam data",
-      description: "Oficjalne odebranie projektu strony internetowej SPS Iskra",
-    },
-  ]
+import NewsCard from "@/components/NewsCard"
+import supabase from "../config/supabaseClient"
+
+const NewsPage = () => {
+  const [news, setNews] = useState<News[]>([])
+
+  const fetchData = async () => {
+    const { data } = await supabase
+      .from('aktualnosci')
+      .select()
+
+    if (data) {
+      setNews(data)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
@@ -36,4 +38,4 @@ const page = () => {
   )
 }
 
-export default page
+export default NewsPage
