@@ -3,7 +3,7 @@
 import { PageImage } from "@/components/PageImage"
 import { useEffect, useState } from "react"
 
-import NewsCard from "@/components/NewsCard"
+import AppCard from "@/components/AppCard"
 import supabase from "../config/supabaseClient"
 
 const NewsPage = () => {
@@ -37,7 +37,7 @@ const NewsPage = () => {
         <h1 className="text-3xl">Aktualności</h1>
         <section className="flex flex-wrap gap-5 items-start justify-center p-10 min-h-[500px]">
           {news.map((news) => (
-            <NewsCard key={news.id} {...news} />
+            <AppCard key={news.id} {...news} type="aktualnosci" />
           ))}
         </section>
       </section>
