@@ -1,4 +1,4 @@
-type News = {
+type CommonProps = {
   id: string,
   title: string,
   image: string | null,
@@ -6,3 +6,7 @@ type News = {
   description: string,
   who: string,
 }
+
+type News = CommonProps
+
+type Competition = CommonProps
