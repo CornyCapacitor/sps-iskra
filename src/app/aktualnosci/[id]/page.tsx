@@ -1,14 +1,17 @@
 'use client'
 
 import { PageImage } from "@/components/PageImage"
-import Link from "next/link"
+import { getProperDate } from "@/components/getProperDate"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
+import supabase from "@/app/config/supabaseClient"
+import Link from "next/link"
+
 const Page = () => {
   const params = useParams()
-  const [image] = useState<string | null>(null)
-  const [data, setData] = useState("")
+  const [data, setData] = useState<News | null>(null)
+  const [date, setDate] = useState("")
 
   useEffect(() => {
     const header = document.getElementById('scrollTarget')
@@ -17,17 +20,35 @@ const Page = () => {
     }
   }, [data])
 
-  // It mimics fetching the data so the image can load properly
+  const fetchData = async () => {
+    const { data } = await supabase
+      .from('aktualnosci')
+      .select()
+      .eq('id', params.id)
+
+    if (data) {
+      setData(data[0])
+      setDate(getProperDate(data[0].created_at))
+      console.log(data)
+    }
+  }
+
   useEffect(() => {
-    setTimeout(() => setData("50"), 1)
+    fetchData()
   }, [])
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
-      <PageImage imageUrl={`${image ? image : "/aktualnosci-placeholder.jpg"}`} />
+      <PageImage imageUrl={`${data ? data.image ? `/${data.image}` : "/aktualnosci-placeholder.jpg" : "/aktualnosci-placeholder.jpg"}`} />
       <section className="flex flex-col flex-wrap gap-5 items-center justify-start p-10 min-h-[500px]">
         <Link className="w-full lg:w-[350px] p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/aktualnosci"}>Wróć do aktualności</Link>
-        <h1 id="scrollTarget" className="text-3xl">{params.id}</h1>
+        {data && (
+          <>
+            <h1 id="scrollTarget" className="text-3xl font-bold">{data.title}</h1>
+            <h1 className="text-1xl text-gray-600">{date} | {data.who}</h1>
+            <h1 className="flex items-center justify-center text-2xl w-[95%] bg-gray-300 rounded-xl min-h-64 text-center p-10 xl:px-64">{data.description}</h1>
+          </>
+        )}
       </section>
     </main>
   )
