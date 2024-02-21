@@ -23,7 +23,7 @@ export const PageImage = ({ imageUrl }: { imageUrl: string }) => {
 
   return (
     <div className="w-full max-h-[800px] overflow-hidden">
-      <Image src={imageUrl} alt="Żołnierz w dziczy" width={viewportWidth} height={800} onLoad={() => setImageLoaded(true)} style={{ visibility: imageLoaded ? "visible" : "hidden" }} />
+      <Image src={imageUrl} alt="Żołnierz w dziczy" width={viewportWidth} height={800} priority={true} onLoad={() => setImageLoaded(true)} className="w-auto h-auto" />
     </div>
   )
 }

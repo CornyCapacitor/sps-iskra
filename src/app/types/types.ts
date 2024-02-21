@@ -2,6 +2,7 @@ type News = {
   id: string,
   title: string,
   image: string | null,
-  date: string,
+  created_at: string,
   description: string,
+  who: string,
 }
