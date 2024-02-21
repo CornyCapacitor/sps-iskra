@@ -10,3 +10,5 @@ type CommonProps = {
 type News = CommonProps
 
 type Competition = CommonProps
+
+type Training = CommonProps & { aspect: string }
