@@ -25,3 +25,7 @@
 .montserrat {
   font-family: Montserrat, Arial, Helvetica, sans-serif;
 }
+
+.scrollbar_hidden::-webkit-scrollbar {
+  display: none;
+}
