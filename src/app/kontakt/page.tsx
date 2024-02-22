@@ -4,8 +4,17 @@ const page = () => {
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
       <PageImage imageUrl={"/contact-placeholder.jpg"} />
-      <section className="flex flex-wrap gap-5 items-start justify-center p-10 min-h-[500px]">
-        <h1 className="text-3xl">Kontakt</h1>
+      <section className="flex flex-col gap-5 max-w-[800px] mx-auto p-10 min-h-[500px] text-justify">
+        <h1 className="text-3xl text-center">Dane do kontaktu dla członków SPS &#x201E;ISKRA&#x201D;</h1>
+        <p className="font-semibold">Facebook: <a className="text-blue-600" href="https://www.facebook.com/profile.php?id=61551801553096" target="_blank">https://www.facebook.com/profile.php?id=61551801553096</a></p>
+        <p className="font-semibold">WhatsApp: <a className="text-blue-600" href="https://chat.whatsapp.com/J0OyYegeJQBEVte5pF0Ua8" target="_blank">https://chat.whatsapp.com/J0OyYegeJQBEVte5pF0Ua8</a></p>
+        <p className="font-semibold">Discord: <a className="text-blue-600" href="https://discord.gg/7HD9KvRW" target="_blank">https://discord.gg/7HD9KvRW</a></p>
+        <p className="font-semibold">email: <span className="font-normal">sps.iskra@bydgoszcz.hub.pl</span></p>
+        <p className="font-semibold">tel: <span className="font-normal">+48 781-697-800</span></p>
+        <h1 className="text-3xl text-center">Dane do kontaktu SPS &#x201E;ISKRA&#x201D;</h1>
+        <p className="font-semibold">Facebook: <a className="text-blue-600" href="https://www.facebook.com/profile.php?id=61551801553096" target="_blank">https://www.facebook.com/profile.php?id=61551801553096</a></p>
+        <p className="font-semibold">email: <span className="font-normal">sps.iskra@bydgoszcz.hub.pl</span></p>
+        <p className="font-semibold">tel: <span className="font-normal">+48 781-697-800</span></p>
       </section>
     </main>
   )
