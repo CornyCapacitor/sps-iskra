@@ -35,7 +35,7 @@ const CompetitionsPage = () => {
       <PageImage imageUrl={"/zawody-placeholder.jpg"} />
       <section className="flex flex-col gap-5 items-center justify-start p-10 min-h-[500px]">
         <h1 className="text-3xl">Komunikaty z zawodów</h1>
-        <section className="flex flex-wrap gap-5 items-start justify-center p-10 min-h-[500px]">
+        <section className="flex flex-wrap gap-5 items-start justify-center p-10">
           {competitions.map((competitions) => (
             <AppCard key={competitions.id} {...competitions} type="zawody" />
           ))}
