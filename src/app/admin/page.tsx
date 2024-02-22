@@ -6,6 +6,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 
+import { getProperDate } from "@/components/getProperDate"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -94,9 +95,15 @@ const AdminPage = () => {
               {news.length === 0 ?
                 <span>Nie wyświetlono żadnych aktualności</span>
                 :
-                <ul>
-                  { }
+                <ul className="flex flex-col gap-5">
                   <button className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nową aktualność</button>
+                  {news.map((news) => (
+                    <div key={news.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                      <p>{news.title}</p>
+                      <p>{getProperDate(news.created_at)} | {news.who}</p>
+                    </div>
+                  ))}
+                  <div className="w-[350px] border-b border-white"></div>
                 </ul>
               }
             </>
@@ -109,9 +116,15 @@ const AdminPage = () => {
               {competitions.length === 0 ?
                 <span>Nie wyświetlono żadnych komunikatów z zawodów</span>
                 :
-                <ul>
-                  { }
+                <ul className="flex flex-col gap-5">
                   <button className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowy komunikat z zawodów</button>
+                  {competitions.map((competition) => (
+                    <div key={competition.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                      <p>{competition.title}</p>
+                      <p>{getProperDate(competition.created_at)} | {competition.who}</p>
+                    </div>
+                  ))}
+                  <div className="w-[350px] border-b border-white"></div>
                 </ul>
               }
             </>
@@ -124,9 +137,29 @@ const AdminPage = () => {
               {civilTrainings.length === 0 && uniformedTrainings.length === 0 && proDefenseTrainings.length === 0 ?
                 <span>Nie wyświetlno żadnych szkoleń</span>
                 :
-                <ul>
-                  { }
+                <ul className="flex flex-col gap-5">
                   <button className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowe szkolenie</button>
+                  <h2 className="font-semibold">Szkolenia cywilne:</h2>
+                  {civilTrainings.map((training) => (
+                    <div key={training.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                      <p>{training.title}</p>
+                      <p>{getProperDate(training.created_at)} | {training.who}</p>
+                    </div>
+                  ))}
+                  <h2 className="font-semibold">Szkolenia mundurowe:</h2>
+                  {uniformedTrainings.map((training) => (
+                    <div key={training.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                      <p>{training.title}</p>
+                      <p>{getProperDate(training.created_at)} | {training.who}</p>
+                    </div>
+                  ))}
+                  <h2 className="font-semibold">Szkolenia proobronne:</h2>
+                  {proDefenseTrainings.map((training) => (
+                    <div key={training.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                      <p>{training.title}</p>
+                      <p>{getProperDate(training.created_at)} | {training.who}</p>
+                    </div>
+                  ))}
                 </ul>
               }
             </>
