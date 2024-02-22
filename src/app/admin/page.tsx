@@ -12,9 +12,14 @@ import { useState } from "react"
 const AdminPage = () => {
   const [user] = useAtom(spsIskraAuthAtom)
 
-  const [news, setNews] = useState<any>([])
-  const [competitions, setCompetitions] = useState<any>([])
-  const [trainings, setTrainings] = useState<any>([])
+  const [news, setNews] = useState<News[]>([])
+  const [showNews, setShowNews] = useState(false)
+  const [competitions, setCompetitions] = useState<Competition[]>([])
+  const [showCompetitions, setShowCompetitions] = useState(false)
+  const [civilTrainings, setCivilTrainings] = useState<Training[]>([])
+  const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
+  const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
+  const [showTrainings, setShowTrainings] = useState(false)
 
   const router = useRouter();
   const supabase = createClientComponentClient();
@@ -28,16 +33,54 @@ const AdminPage = () => {
     })
   }
 
-  const fetchNews = () => {
-    setNews([{ id: "dupa" }, { id: "kupa" }])
+  const fetchNews = async () => {
+    const { data } = await supabase
+      .from('aktualnosci')
+      .select()
+
+    if (data) {
+      // Sorting by timestamp
+      const sortedData = data.sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime()
+        const dateB = new Date(b.created_at).getTime();
+        return dateA - dateB
+      })
+      setNews(sortedData)
+      setShowNews(true)
+    }
   }
 
-  const fetchCompetitions = () => {
-    setCompetitions([{ id: "dupa" }, { id: "kupa" }])
+  const fetchCompetitions = async () => {
+    const { data } = await supabase
+      .from('zawody')
+      .select()
+
+    if (data) {
+      // Sorting by timestamp
+      const sortedData = data.sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime()
+        const dateB = new Date(b.created_at).getTime();
+        return dateA - dateB
+      })
+      setCompetitions(sortedData)
+      setShowCompetitions(true)
+    }
   }
 
-  const fetchTrainings = () => {
-    setTrainings([{ id: "dupa" }, { id: "kupa" }])
+  const fetchTrainings = async () => {
+    const { data } = await supabase
+      .from('szkolenia')
+      .select()
+
+    if (data) {
+      const civilTrainingsData = data.filter(training => training.aspect === 'cywilne')
+      const uniformedTrainingsData = data.filter(training => training.aspect === 'mundurowe')
+      const proDefenseTrainingsData = data.filter(training => training.aspect === 'proobronne')
+      setCivilTrainings(civilTrainingsData)
+      setUniformedTrainings(uniformedTrainingsData)
+      setProDefenseTrainings(proDefenseTrainingsData)
+      setShowTrainings(true)
+    }
   }
 
   if (user) {
@@ -45,26 +88,47 @@ const AdminPage = () => {
       <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
         <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
           <button className="w-[150px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center self-end" onClick={() => handleLogout()}>Wyloguj</button>
-          {news.length ?
+          {showNews ?
             <>
-              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setNews([])}>Schowaj aktualności</button>
-              <span>Aktualności</span>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowNews(false)}>Schowaj aktualności</button>
+              {news.length === 0 ?
+                <span>Nie wyświetlono żadnych aktualności</span>
+                :
+                <ul>
+                  { }
+                  <button className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nową aktualność</button>
+                </ul>
+              }
             </>
             :
             <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchNews()}>Pokaż aktualności</button>
           }
-          {competitions.length ?
+          {showCompetitions ?
             <>
-              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setCompetitions([])}>Schowaj zawody</button>
-              <span>Zawody</span>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowCompetitions(false)}>Schowaj zawody</button>
+              {competitions.length === 0 ?
+                <span>Nie wyświetlono żadnych komunikatów z zawodów</span>
+                :
+                <ul>
+                  { }
+                  <button className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowy komunikat z zawodów</button>
+                </ul>
+              }
             </>
             :
             <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchCompetitions()}>Pokaż zawody</button>
           }
-          {trainings.length ?
+          {showTrainings ?
             <>
-              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setTrainings([])}>Schowaj zkolenia</button>
-              <span>Szkolenia</span>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowTrainings(false)}>Schowaj zkolenia</button>
+              {civilTrainings.length === 0 && uniformedTrainings.length === 0 && proDefenseTrainings.length === 0 ?
+                <span>Nie wyświetlno żadnych szkoleń</span>
+                :
+                <ul>
+                  { }
+                  <button className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowe szkolenie</button>
+                </ul>
+              }
             </>
             :
             <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchTrainings()}>Pokaż szkolenia</button>
