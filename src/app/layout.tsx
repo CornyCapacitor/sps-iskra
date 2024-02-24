@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 
-import AuthListener from "@/components/AutListener";
+import AuthListener from "@/components/AuthListener";
 import "./globals.css";
 
 export const metadata: Metadata = {
