@@ -18,7 +18,6 @@ const Page = () => {
   const [data, setData] = useState<News>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [imageUrl, setImageUrl] = useState("")
 
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [newFile, setNewFile] = useState<File | null>(null)
@@ -36,7 +35,6 @@ const Page = () => {
       setData(data[0])
       setTitle(data[0].title)
       setDescription(data[0].description)
-      setImageUrl(data[0].image)
     }
   }
 

@@ -70,7 +70,7 @@ const Page = () => {
         iconColor: '#2563eb',
         background: `${themeBackground}`,
         color: `${themeColor}`,
-        title: "Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?",
+        title: "Czy na pewno nie chcesz załączać zdjęcia do tego szkolenia?",
         showConfirmButton: true,
         confirmButtonText: "Tak",
         showCancelButton: true,
@@ -89,7 +89,7 @@ const Page = () => {
         iconColor: '#2563eb',
         background: `${themeBackground}`,
         color: `${themeColor}`,
-        title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?",
+        title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzone szkolenie?",
         showConfirmButton: true,
         confirmButtonText: "Tak",
         showCancelButton: true,
@@ -144,7 +144,7 @@ const Page = () => {
 
       const { data, error } = await supabase
         .storage
-        .from('aktualnosci')
+        .from('szkolenia')
         .upload(`uniqueId`, file)
 
       if (data) {
@@ -177,7 +177,7 @@ const Page = () => {
           <option value="mundurowe" className="custom_option">Dla służb mundurowych</option>
           <option value="proobronne" className="custom_option">Proobronne</option>
         </select>
-        <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie aktualności" width={350} height={350} className="rounded-lg" />
+        <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie szkolenia" width={350} height={350} className="rounded-lg" />
         <p>Wybierz zdjęcie klikając poniżej:</p>
         <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
         <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateTraining(e)}>Stwórz szkolenie</button>
