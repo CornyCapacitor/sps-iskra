@@ -29,3 +29,26 @@
 .scrollbar_hidden::-webkit-scrollbar {
   display: none;
 }
+
+.custom_select {
+  width: 350px;
+  height: 47.25px;
+  background-color: transparent;
+  padding: 0px 12px;
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  border: solid 1px #d9d9d9;
+  border-radius: 4px;
+  outline: none;
+}
+
+.custom_option {
+  display: flex;
+  width: 100%;
+  align-items: space-between;
+  justify-content: space-between;
+  background-color: transparent;
+  color: black;
+}
