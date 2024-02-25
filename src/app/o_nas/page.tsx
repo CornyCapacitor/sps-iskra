@@ -13,7 +13,7 @@ const page = () => {
         <p>Zapraszamy do członkostwa osoby, które podzielają nasze cele i chcą aktywnie uczestniczyć w naszej działalności. Warunkiem ubiegania się o członkostwo jest złożenie deklaracji członkowskiej oraz aktywne uczestnictwo w życiu stowarzyszenia.</p>
         <div>Obrazek przedstawiający delkarację członkowską do pobrania</div>
         <h2 className="text-2xl text-center">Składki</h2>
-        <p>Składka członkowska roczna wynosi - 100 zł płatne jednorazowo do 30 marca roku kalendarzowego (w przypadku nowych członków po 30 marca w ciągu trzech miesięcy od dołączenia).</p>
+        <p>Składka członkowska roczna wynosi - 100 zł dla członków pełnoletnich, a dla uczniów do ukończenia 18 lat 25zł płatne jednorazowo do 30 marca roku kalendarzowego (w przypadku nowych członków przyjętych po 30 marca w ciągu trzech miesięcy od dołączenia).</p>
         <div className="bg-green-200 p-10 rounded-xl border border-green-600 flex flex-col gap-2">
           <p>Przy wpłatach pieniężnych na cele statutowe stowarzyszenia proszę wyraźnie:</p>
           <p>wpisywać imię, nazwisko oraz na co przeznaczona jest wpłata</p>

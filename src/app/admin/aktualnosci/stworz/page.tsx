@@ -97,12 +97,10 @@ const Page = () => {
     const shortid = require('shortid')
     const uniqueId = shortid.generate()
 
-    console.log("Unique ID:", uniqueId)
-
     const updateValue = { id: uniqueId, title: title, description: description, who: user.user_metadata?.username, image: null }
 
     const updateData = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('aktualnosci')
         .insert(updateValue)
         .select()
@@ -122,10 +120,6 @@ const Page = () => {
             router.push('/admin')
           }
         })
-      }
-
-      if (error) {
-        return
       }
     }
 
@@ -182,7 +176,7 @@ const Page = () => {
         <p>Wybierz zdjęcie klikając poniżej:</p>
         <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
         <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateNews(e)}>Stwórz aktualność</button>
-        <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => abortNews()}>Odrzuć aktualność</button>
+        <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => abortNews()}>Odrzuć wprowadzone zmiany</button>
       </div>
     </main>
   )

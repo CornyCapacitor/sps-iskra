@@ -23,8 +23,13 @@ export default function Home() {
         ))}
       </section>
       <SectionSeparator />
-      <section className="flex items-start p-10 justify-center min-h-[500px]">
+      <section className="flex flex-col items-center p-10 justify-start min-h-[500px]">
         <h1 className="text-3xl">Współpraca</h1>
+        <div className="flex flex-wrap items-center justify-center">
+          <a href="https://astmotors.pl/" target="_blank">
+            <img src="/ast-motors.png" alt="Logo ast motors" className="cursor-pointer" />
+          </a>
+        </div>
       </section>
     </main>
   );
