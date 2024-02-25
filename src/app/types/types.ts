@@ -12,3 +12,9 @@ type News = CommonProps
 type Competition = CommonProps
 
 type Training = CommonProps & { aspect: string }
+
+type Card = {
+  title: string,
+  description: string,
+  path: string,
+}

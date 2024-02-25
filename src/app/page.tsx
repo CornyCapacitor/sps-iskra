@@ -6,11 +6,6 @@ import { SectionSeparator } from "@/components/SectionSeparator";
 import { useState } from "react";
 import { cardsData } from "./cardsData";
 
-type Card = {
-  title: string,
-  description: string,
-}
-
 export default function Home() {
   const [cards, setCards] = useState<Card[]>(cardsData)
 
@@ -19,7 +14,7 @@ export default function Home() {
       <PageImage imageUrl={"/main-placeholder.jpg"} />
       <section className="flex flex-wrap gap-5 items-center justify-center p-10 min-h-[500px]">
         {cards.map((card, index) => (
-          <HomeCard key={index} title={card.title} description={card.description} />
+          <HomeCard key={index} title={card.title} description={card.description} path={card.path} />
         ))}
       </section>
       <SectionSeparator />
