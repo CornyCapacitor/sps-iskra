@@ -1,5 +1,7 @@
 'use client'
 
+import { spsIskraAuthAtom } from '@/state/atoms'
+import { useAtom } from 'jotai'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -8,6 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const Page = () => {
+  const [user] = useAtom(spsIskraAuthAtom)
   const params = useParams()
 
   const [data, setData] = useState<News>()
@@ -60,7 +63,9 @@ const Page = () => {
   }
 
   const deleteNews = () => {
-    return
+    if (!user) {
+      return
+    }
   }
 
   return (
