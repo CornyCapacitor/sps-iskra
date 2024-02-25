@@ -8,7 +8,7 @@ export const Footer = () => {
         <Link href="https://www.youtube.com/" target="_blank" className="bg-white p-2 rounded-full hover:scale-110 transition-[0.2s]">
           <Image src="/youtube-icon.svg" alt="Youtube icon" width={75} height={75} />
         </Link>
-        <Link href="https://www.facebook.com/" target="_blank" className="bg-white p-2 rounded-full hover:scale-110 transition-[0.2s]">
+        <Link href="https://www.facebook.com/profile.php?id=61551801553096" target="_blank" className="bg-white p-2 rounded-full hover:scale-110 transition-[0.2s]">
           <Image src="/facebook-icon.svg" alt="Facebook icon" width={75} height={75} />
         </Link>
         <Link href="https://www.instagram.com/" target="_blank" className="bg-white p-2 rounded-full hover:scale-110 transition-[0.2s]">
