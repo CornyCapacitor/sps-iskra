@@ -11,10 +11,10 @@ export default function Home() {
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
-      <PageImage imageUrl={"/main-placeholder.jpg"} />
+      <PageImage imageUrl={"/home.jpg"} />
       <section className="flex flex-wrap gap-5 items-center justify-center p-10 min-h-[500px]">
         {cards.map((card, index) => (
-          <HomeCard key={index} title={card.title} description={card.description} path={card.path} />
+          <HomeCard key={index} title={card.title} description={card.description} image={card.image} path={card.path} />
         ))}
       </section>
       <SectionSeparator />

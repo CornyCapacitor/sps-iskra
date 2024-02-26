@@ -16,5 +16,6 @@ type Training = CommonProps & { aspect: string }
 type Card = {
   title: string,
   description: string,
+  image: string,
   path: string,
 }

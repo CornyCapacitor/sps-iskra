@@ -2,9 +2,9 @@ import { getProperDate } from "./getProperDate"
 
 import Link from "next/link"
 
-type AppCardProps = News & { type: string, aspect?: string }
+type AppCardProps = News & { type: string }
 
-const AppCard = ({ id, title, image, created_at, type }: AppCardProps) => {
+const AppCard = ({ id, title, image, created_at, type, }: AppCardProps) => {
   const properDate = getProperDate(created_at)
 
   if (type === "szkolenia") {

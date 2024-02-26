@@ -3,7 +3,7 @@ import { PageImage } from "@/components/PageImage"
 const page = () => {
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
-      <PageImage imageUrl={"/about-placeholder.jpg"} />
+      <PageImage imageUrl={"/about.jpg"} />
       <section className="flex flex-col gap-10 max-w-[800px] mx-auto p-10 min-h-[500px] text-justify">
         <h1 className="text-3xl text-center">Stowarzyszenie Proobronno-Szkoleniowe &#x201E;ISKRA&#x201D;</h1>
         <p>Stowarzyszenie Proobronno-Szkoleniowe „SPS ISKRA” jest dedykowane propagowaniu strzelectwa, strzelectwa sportowego, oraz kolekcjonerstwa broni i amunicji zgodnie z przepisami Ustawy o broni i amunicji z dnia 21 maja 1999 r. Realizujemy swoje cele poprzez szkolenia, edukację dzieci, młodzieży i dorosłych, oraz działania na rzecz obronności państwa i bezpieczeństwa publicznego. Ponadto angażujemy się w ochronę dziedzictwa narodowego, promowanie kultury fizycznej, oraz działania wspomagające rozwój społeczności lokalnych.</p>
