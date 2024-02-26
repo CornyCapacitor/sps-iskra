@@ -1,6 +1,32 @@
-import { PageImage } from "@/components/PageImage"
+'use client'
 
-const page = () => {
+import { PageImage } from "@/components/PageImage"
+import Image from "next/image"
+import Swal from "sweetalert2"
+
+const Page = () => {
+  const handleDocumentClick = () => {
+    Swal.fire({
+      color: "#fff",
+      background: "#111827",
+      title: 'Czy na pewno chcesz pobrać deklarację członkowską?',
+      showConfirmButton: true,
+      confirmButtonText: "Tak",
+      confirmButtonColor: "#000fe2",
+      showCancelButton: true,
+      cancelButtonText: "Nie",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const link = document.createElement('a');
+        link.href = 'deklaracja-czlonkowska-zatwierdzona.docx'
+        link.setAttribute('download', 'deklaracja-czlonkowska-zatwierdzona.docx')
+        document.body.appendChild(link)
+        link.click();
+        document.body.removeChild(link);
+      }
+    })
+  }
+
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
       <PageImage imageUrl={"/about.jpg"} />
@@ -11,7 +37,8 @@ const page = () => {
         <p>Organizujemy różnorodne programy szkoleń, ćwiczeń, kursów, zawodów, oraz konferencji i seminariów. Współpracujemy z organami administracji publicznej, jednostkami wojskowymi, oraz innymi podmiotami w celu efektywnego realizowania naszych celów. Nasze szkolenia są prowadzone przez wykwalifikowanych instruktorów, z poszanowaniem obowiązujących przepisów prawa z zakresu bezpieczeństwa i porządku publicznego.</p>
         <h2 className="text-2xl text-center">Członkowstwo</h2>
         <p>Zapraszamy do członkostwa osoby, które podzielają nasze cele i chcą aktywnie uczestniczyć w naszej działalności. Warunkiem ubiegania się o członkostwo jest złożenie deklaracji członkowskiej oraz aktywne uczestnictwo w życiu stowarzyszenia.</p>
-        <div>Obrazek przedstawiający delkarację członkowską do pobrania</div>
+        <p className="self-center">Kliknij w obrazek poniżej w celu pobrania deklaracji:</p>
+        <Image src="/document.svg" alt="File download icon" width={80} height={80} className="self-center border border-black rounded-full p-2 hover:cursor-pointer hover:shadow-2xl transition-[0.2s]" onClick={() => handleDocumentClick()} />
         <h2 className="text-2xl text-center">Składki</h2>
         <p>Składka członkowska roczna wynosi - 100 zł dla członków pełnoletnich, a dla uczniów do ukończenia 18 lat 25zł płatne jednorazowo do 30 marca roku kalendarzowego (w przypadku nowych członków przyjętych po 30 marca w ciągu trzech miesięcy od dołączenia).</p>
         <div className="bg-green-200 p-10 rounded-xl border border-green-600 flex flex-col gap-2">
@@ -31,4 +58,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
