@@ -18,7 +18,7 @@ const Page = () => {
   const [description, setDescription] = useState("")
 
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
-  const [file, setNewFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null)
 
   const themeBackground = "#000000"
   const themeColor = "#ffffff"
@@ -26,6 +26,7 @@ const Page = () => {
   const handleCreateNews = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
+    // Checking if user's logged on
     if (!user) {
       Swal.fire({
         icon: 'error',
@@ -38,6 +39,7 @@ const Page = () => {
       return
     }
 
+    // Checking if inputs are not empty
     if (!title || !description) {
       Swal.fire({
         icon: 'error',
@@ -50,6 +52,7 @@ const Page = () => {
       return
     }
 
+    // Checking if user wants to create news without image attached
     if (title && description && !file) {
       Swal.fire({
         icon: 'question',
@@ -69,6 +72,7 @@ const Page = () => {
       })
     }
 
+    // If everything is attached, additional idiot-proof check
     if (title && description && file) {
       Swal.fire({
         icon: 'question',
@@ -97,7 +101,7 @@ const Page = () => {
     const shortid = require('shortid')
     const uniqueId = shortid.generate()
 
-    const updateValue = { id: uniqueId, title: title, description: description, who: user.user_metadata?.username, image: null }
+    const updateValue = { id: uniqueId, title: title, description: description, who: user.user_metadata?.username, image: file ? true : false }
 
     const updateData = async () => {
       const { data } = await supabase
@@ -131,7 +135,7 @@ const Page = () => {
       const { data, error } = await supabase
         .storage
         .from('aktualnosci')
-        .upload(`uniqueId`, file)
+        .upload(`${uniqueId}`, file)
 
       if (data) {
         console.log(data)
@@ -146,15 +150,31 @@ const Page = () => {
     updateFile()
   }
 
+  // Rejecting all the changes and reloading the news
   const abortNews = () => {
-    window.location.reload()
+    Swal.fire({
+      icon: 'success',
+      iconColor: 'green',
+      background: `${themeBackground}`,
+      color: `${themeColor}`,
+      title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
+      showConfirmButton: true,
+      confirmButtonText: "Tak",
+      showCancelButton: true,
+      cancelButtonText: "Nie",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload()
+      }
+    })
   }
 
+  // Setting file state as selected file from user's device
   const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    setNewFile(file)
+    setFile(file)
 
     const reader = new FileReader()
     reader.onload = (event) => {

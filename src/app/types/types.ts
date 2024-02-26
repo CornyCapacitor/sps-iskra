@@ -1,7 +1,7 @@
 type CommonProps = {
   id: string,
   title: string,
-  image: string | null,
+  image: boolean,
   created_at: string,
   description: string,
   who: string,
