@@ -23,6 +23,7 @@ const Page = () => {
   const themeBackground = "#000000"
   const themeColor = "#ffffff"
 
+  // Handler for create news and upload news image
   const handleCreateNews = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
@@ -93,6 +94,7 @@ const Page = () => {
     }
   }
 
+  // Creating news based on user changes
   const createNews = () => {
     if (!user) {
       return
@@ -127,7 +129,7 @@ const Page = () => {
       }
     }
 
-    const updateFile = async () => {
+    const updateImage = async () => {
       if (!file || !user) {
         return
       }
@@ -147,7 +149,7 @@ const Page = () => {
     }
 
     updateData()
-    updateFile()
+    updateImage()
   }
 
   // Rejecting all the changes and reloading the news
