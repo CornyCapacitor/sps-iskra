@@ -21,6 +21,8 @@ const AdminPage = () => {
   const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
   const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
   const [showTrainings, setShowTrainings] = useState(false)
+  const [helpers, setHelpers] = useState<Helper[]>([])
+  const [showHelpers, setShowHelpers] = useState(false)
 
   const router = useRouter();
   const supabase = createClientComponentClient();
@@ -81,6 +83,17 @@ const AdminPage = () => {
       setUniformedTrainings(uniformedTrainingsData)
       setProDefenseTrainings(proDefenseTrainingsData)
       setShowTrainings(true)
+    }
+  }
+
+  const fetchHelpers = async () => {
+    const { data } = await supabase
+      .from('wspierajacy')
+      .select()
+
+    if (data) {
+      setHelpers(data)
+      setShowHelpers(true)
     }
   }
 
@@ -171,6 +184,29 @@ const AdminPage = () => {
             </>
             :
             <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchTrainings()}>Pokaż szkolenia</button>
+          }
+          <div className="w-[95%] border-b border-white"></div>
+          {showHelpers ?
+            <>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowHelpers(false)}>Schowaj wspierających</button>
+              <Link href="/admin/wspierajacy/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowego wspierającego</Link>
+              {helpers.length === 0 ?
+                <span>Nie wyświetlono żadnych wspierających</span>
+                :
+                <>
+                  <ul className="flex flex-wrap items-center justify-center gap-5">
+                    {helpers.map((helper) => (
+                      <Link href="/wspierajacy/[id]" as={`/admin/zawody/${helper.id}`} key={helper.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                        <p>{helper.name}</p>
+                        <p>{getProperDate(helper.created_at)} | {helper.who}</p>
+                      </Link>
+                    ))}
+                  </ul>
+                </>
+              }
+            </>
+            :
+            <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchHelpers()}>Pokaż wspierających</button>
           }
         </div>
       </main>

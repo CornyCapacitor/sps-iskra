@@ -22,8 +22,8 @@ export const PageImage = ({ imageUrl }: { imageUrl: string }) => {
   }, [])
 
   return (
-    <div className="w-full max-h-[800px] overflow-hidden">
-      <Image src={imageUrl} alt="Żołnierz w dziczy" width={viewportWidth} height={800} priority={true} onLoad={() => setImageLoaded(true)} className="w-auto h-auto" />
+    <div className="w-full max-h-[800px] overflow-hidden bg-gray-300">
+      <Image src={imageUrl} alt="Żołnierz w dziczy" width={viewportWidth} height={800} priority={true} onLoad={() => setImageLoaded(true)} className="object-contain" />
     </div>
   )
 }

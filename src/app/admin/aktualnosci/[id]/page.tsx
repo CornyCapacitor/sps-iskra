@@ -15,14 +15,17 @@ const Page = () => {
   const params = useParams()
   const router = useRouter()
 
+  // News parameters
   const [data, setData] = useState<News>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [image, setImage] = useState(false)
 
+  // States for displaying and updating* the news image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
 
+  // Swal colours
   const themeBackground = "#000000"
   const themeColor = "#ffffff"
 
@@ -94,7 +97,18 @@ const Page = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           updateChanges()
-          router.push('/admin')
+          Swal.fire({
+            icon: 'success',
+            iconColor: 'green',
+            background: `${themeBackground}`,
+            color: `${themeColor}`,
+            title: "Aktualność zaktualizowana.",
+            showConfirmButton: true,
+            confirmButtonText: "Ok",
+            timer: 5000,
+          }).then(() => {
+            router.push('/admin')
+          })
         }
         return
       })
@@ -115,7 +129,18 @@ const Page = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           updateChanges()
-          router.push('/admin')
+          Swal.fire({
+            icon: 'success',
+            iconColor: 'green',
+            background: `${themeBackground}`,
+            color: `${themeColor}`,
+            title: "Aktualność zaktualizowana.",
+            showConfirmButton: true,
+            confirmButtonText: "Ok",
+            timer: 5000,
+          }).then(() => {
+            router.push('/admin')
+          })
         }
         return
       })
@@ -157,8 +182,8 @@ const Page = () => {
   // Rejecting all the changes and reloading the news edit page
   const abortChanges = () => {
     Swal.fire({
-      icon: 'success',
-      iconColor: 'green',
+      icon: 'question',
+      iconColor: '#2563eb',
       background: `${themeBackground}`,
       color: `${themeColor}`,
       title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
@@ -168,7 +193,7 @@ const Page = () => {
       cancelButtonText: "Nie",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.reload()
+        router.push('/admin')
       }
     })
   }
@@ -202,7 +227,18 @@ const Page = () => {
       if (result.isConfirmed) {
         deleteNews()
         deleteImage()
-        router.push('/admin')
+        Swal.fire({
+          icon: 'success',
+          iconColor: 'green',
+          background: `${themeBackground}`,
+          color: `${themeColor}`,
+          title: "Aktualność usunięta pomyślnie.",
+          showConfirmButton: true,
+          confirmButtonText: "Ok",
+          timer: 5000,
+        }).then(() => {
+          router.push('/admin')
+        })
       }
       return
     })
@@ -243,7 +279,7 @@ const Page = () => {
     reader.readAsDataURL(file)
   }
 
-  // Setting the image to be removed
+  // Setting the image to be removed locally
   const removeImage = () => {
     Swal.fire({
       icon: 'question',
@@ -273,7 +309,7 @@ const Page = () => {
       .remove([`${params.id}`])
 
     if (data) {
-      return
+      return data
     }
 
     if (error) {
@@ -293,7 +329,7 @@ const Page = () => {
       .upload(`${params.id}`, file)
 
     if (data) {
-      console.log(data)
+      return data
     }
 
     if (error) {
@@ -301,25 +337,37 @@ const Page = () => {
     }
   }
 
+  <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
+    <span className="text-2xl">Prawdopodobnie nie powinno cię tu być.</span>
+  </main>
+
+  if (user) {
+    return (
+      <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
+        <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
+          <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
+          <span>Id: {params.id}</span>
+          {data && (
+            <>
+              <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł aktualności" />
+              <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis aktualności" />
+              <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie aktualności" width={350} height={350} className="rounded-lg" />
+              <p>Wybierz inne zdjęcie klikając poniżej:</p>
+              <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
+              <button className="w-[350px] p-3 rounded-md bg-slate-600 text-white hover:bg-slate-700 focus:outline-none text-center" onClick={() => removeImage()}>Usuń zdjęcie z tej aktualności</button>
+              <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleUpdateChanges(e)}>Zapisz zmiany</button>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => abortChanges()}>Odrzuć zmiany</button>
+              <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => handleDeleteNews()}>Usuń aktualność</button>
+            </>
+          )}
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
-        <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
-        <span>Id: {params.id}</span>
-        {data && (
-          <>
-            <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł aktualności" />
-            <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis aktualności" />
-            <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie aktualności" width={350} height={350} className="rounded-lg" />
-            <p>Wybierz inne zdjęcie klikając poniżej:</p>
-            <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
-            <button className="w-[350px] p-3 rounded-md bg-slate-600 text-white hover:bg-slate-700 focus:outline-none text-center" onClick={() => removeImage()}>Usuń zdjęcie z tej aktualności</button>
-            <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleUpdateChanges(e)}>Zapisz zmiany</button>
-            <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => abortChanges()}>Odrzuć zmiany</button>
-            <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => handleDeleteNews()}>Usuń aktualność</button>
-          </>
-        )}
-      </div>
+      <span className="text-2xl">Prawdopodobnie nie powinno cię tu być.</span>
     </main>
   )
 }

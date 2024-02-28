@@ -2,6 +2,7 @@
 
 import { PageImage } from "@/components/PageImage"
 import { getProperDate } from "@/components/getProperDate"
+import { properUrl } from "@/components/properUrl"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -29,7 +30,6 @@ const Page = () => {
     if (data) {
       setData(data[0])
       setDate(getProperDate(data[0].created_at))
-      console.log(data)
     }
   }
 
@@ -37,9 +37,11 @@ const Page = () => {
     fetchData()
   }, [])
 
+  console.log(params[0])
+
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
-      <PageImage imageUrl={`${data?.image ? `https://mlgdboblxxbeaippvitv.supabase.co/storage/v1/object/public/aktualnosci/${params.id}` : "/aktualnosci-placeholder.jpg"}`} />
+      <PageImage imageUrl={`${data?.image ? properUrl("aktualnosci", params.id) : "/aktualnosci-placeholder.jpg"}`} />
       <section className="flex flex-col flex-wrap gap-5 items-center justify-start p-10 min-h-[500px]">
         <Link className="w-full lg:w-[350px] p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/aktualnosci"}>Wróć do aktualności</Link>
         {data && (
