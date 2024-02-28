@@ -99,9 +99,7 @@ const Page = () => {
 
   // Creating news based on user changes
   const createNews = () => {
-    if (!user) {
-      return
-    }
+    if (!user) return
 
     const shortid = require('shortid')
     const uniqueId = shortid.generate()
@@ -133,9 +131,7 @@ const Page = () => {
     }
 
     const updateImage = async () => {
-      if (!file || !user) {
-        return
-      }
+      if (!file || !user) return
 
       const { data, error } = await supabase
         .storage
@@ -143,11 +139,11 @@ const Page = () => {
         .upload(`${uniqueId}`, file)
 
       if (data) {
-        console.log(data)
+        return data
       }
 
       if (error) {
-        console.log(error)
+        console.error(error)
       }
     }
 
@@ -155,7 +151,7 @@ const Page = () => {
     updateImage()
   }
 
-  // Rejecting all the changes and reloading the news
+  // Rejecting all the changes
   const abortNews = () => {
     Swal.fire({
       icon: 'question',
