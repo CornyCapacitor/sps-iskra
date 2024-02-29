@@ -21,6 +21,8 @@ const AdminPage = () => {
   const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
   const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
   const [showTrainings, setShowTrainings] = useState(false)
+  const [helpers, setHelpers] = useState<Helper[]>([])
+  const [showHelpers, setShowHelpers] = useState(false)
 
   const router = useRouter();
   const supabase = createClientComponentClient();
@@ -84,19 +86,35 @@ const AdminPage = () => {
     }
   }
 
+  const fetchHelpers = async () => {
+    const { data } = await supabase
+      .from('wspierajacy')
+      .select()
+
+    if (data) {
+      setHelpers(data)
+      setShowHelpers(true)
+    }
+  }
+
   if (user) {
     return (
       <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
         <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
-          <button className="w-[150px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center self-end" onClick={() => handleLogout()}>Wyloguj</button>
+          <div className="self-end flex gap-2">
+            {user.user_metadata.permissions === "yes" && (
+              <Link href="/admin/signup" className="w-[300px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center">Stwórz nowe konto</Link>
+            )}
+            <button className="w-[150px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center" onClick={() => handleLogout()}>Wyloguj</button>
+          </div>
           {showNews ?
             <>
               <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowNews(false)}>Schowaj aktualności</button>
+              <Link href="/admin/aktualnosci/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nową aktualność</Link>
               {news.length === 0 ?
                 <span>Nie wyświetlono żadnych aktualności</span>
                 :
                 <>
-                  <Link href="/admin/aktualnosci/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nową aktualność</Link>
                   <ul className="flex flex-wrap items-center justify-center gap-5">
                     {news.map((news) => (
                       <Link href="/admin/aktualnosci/[id]" as={`/admin/aktualnosci/${news.id}`} key={news.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
@@ -115,11 +133,11 @@ const AdminPage = () => {
           {showCompetitions ?
             <>
               <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowCompetitions(false)}>Schowaj zawody</button>
+              <Link href="/admin/zawody/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowy komunikat z zawodów</Link>
               {competitions.length === 0 ?
                 <span>Nie wyświetlono żadnych komunikatów z zawodów</span>
                 :
                 <>
-                  <Link href="/admin/zawody/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowy komunikat z zawodów</Link>
                   <ul className="flex flex-wrap items-center justify-center gap-5">
                     {competitions.map((competition) => (
                       <Link href="/zawody/[id]" as={`/admin/zawody/${competition.id}`} key={competition.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
@@ -138,11 +156,11 @@ const AdminPage = () => {
           {showTrainings ?
             <>
               <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowTrainings(false)}>Schowaj zkolenia</button>
+              <Link href="/admin/szkolenia/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowe szkolenie</Link>
               {civilTrainings.length === 0 && uniformedTrainings.length === 0 && proDefenseTrainings.length === 0 ?
                 <span>Nie wyświetlno żadnych szkoleń</span>
                 :
                 <>
-                  <Link href="/admin/szkolenia/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowe szkolenie</Link>
                   <ul className="flex flex-wrap items-center justify-center gap-5">
                     <h2 className="w-full font-semibold">Szkolenia cywilne:</h2>
                     {civilTrainings.map((training) => (
@@ -171,6 +189,29 @@ const AdminPage = () => {
             </>
             :
             <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchTrainings()}>Pokaż szkolenia</button>
+          }
+          <div className="w-[95%] border-b border-white"></div>
+          {showHelpers ?
+            <>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowHelpers(false)}>Schowaj wspierających</button>
+              <Link href="/admin/wspierajacy/stworz" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">+ Dodaj nowego wspierającego</Link>
+              {helpers.length === 0 ?
+                <span>Nie wyświetlono żadnych wspierających</span>
+                :
+                <>
+                  <ul className="flex flex-wrap items-center justify-center gap-5">
+                    {helpers.map((helper) => (
+                      <Link href="/wspierajacy/[id]" as={`/admin/wspierajacy/${helper.id}`} key={helper.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                        <p>{helper.name}</p>
+                        <p>{getProperDate(helper.created_at)} | {helper.who}</p>
+                      </Link>
+                    ))}
+                  </ul>
+                </>
+              }
+            </>
+            :
+            <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => fetchHelpers()}>Pokaż wspierających</button>
           }
         </div>
       </main>

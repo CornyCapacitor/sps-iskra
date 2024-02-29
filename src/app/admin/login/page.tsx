@@ -97,7 +97,6 @@ const LoginPage = () => {
         <input type="email" name="email" value={email} placeholder="adres email" onChange={(e) => setEmail(e.target.value)} className="w-full p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
         <input type="password" name="password" value={password} placeholder="hasło" onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => handleKeyDown(e)} className="w-full p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
         <button onClick={handleSignIn} className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">Zaloguj</button>
-        <Link href="/admin/signup" className="w-full p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center">Stwórz konto</Link>
       </div>
     </main>
   )

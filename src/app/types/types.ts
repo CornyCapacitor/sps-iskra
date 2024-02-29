@@ -1,7 +1,7 @@
 type CommonProps = {
   id: string,
   title: string,
-  image: string | null,
+  image: boolean,
   created_at: string,
   description: string,
   who: string,
@@ -18,4 +18,13 @@ type Card = {
   description: string,
   image: string,
   path: string,
+}
+
+type Helper = {
+  id: string,
+  name: string,
+  path: string,
+  image: boolean,
+  created_at: string,
+  who: string,
 }

@@ -14,32 +14,24 @@ const Page = () => {
   const [user] = useAtom(spsIskraAuthAtom)
   const router = useRouter()
 
+  // News parameters
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [aspect, setAspect] = useState("")
 
+  // States for displaying and updating* the news image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
-  const [file, setNewFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null)
 
+  // Swal colours
   const themeBackground = "#000000"
   const themeColor = "#ffffff"
 
-  const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  // Handler for create news and upload training image
+  const handleCreateTraining = async (e: { preventDefault: () => void }) => {
+    e.preventDefault()
 
-    setNewFile(file)
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      if (event.target) {
-        setTempImageUrl(event.target.result as string)
-      }
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const handleCreateTraining = (e: { preventDefault: () => void }) => {
+    // Checking if user's logged on
     if (!user) {
       Swal.fire({
         icon: 'error',
@@ -52,19 +44,21 @@ const Page = () => {
       return
     }
 
+    // Checking if inputs and select are not empty
     if (!title || !description || !aspect) {
       Swal.fire({
         icon: 'error',
         iconColor: '#e71f1f',
         background: `${themeBackground}`,
         color: `${themeColor}`,
-        title: "Nie wypełniłeś/wybrałeś właściwych pól poprawnie.",
+        title: "Nie wypełniłeś właściwych pól poprawnie.",
         timer: 5000,
       })
       return
     }
 
-    if (title && description && !file) {
+    // Checking if user wants to create training without image attached
+    if (title && description && aspect && !file) {
       Swal.fire({
         icon: 'question',
         iconColor: '#2563eb',
@@ -83,7 +77,8 @@ const Page = () => {
       })
     }
 
-    if (title && description && file) {
+    // If everything is attached, additional idiot-proof check
+    if (title && description && aspect && file) {
       Swal.fire({
         icon: 'question',
         iconColor: '#2563eb',
@@ -103,15 +98,14 @@ const Page = () => {
     }
   }
 
-  const createTraining = async () => {
-    if (!user) {
-      return
-    }
+  // Creating training based on user changes
+  const createTraining = () => {
+    if (!user) return
 
     const shortid = require('shortid')
     const uniqueId = shortid.generate()
 
-    const updateValue = { id: uniqueId, title: title, description: description, who: user.user_metadata?.username, image: null, aspect: aspect }
+    const updateValue = { id: uniqueId, title: title, description: description, who: user.user_metadata?.username, image: file ? true : false, aspect: aspect }
 
     const updateData = async () => {
       const { data } = await supabase
@@ -137,52 +131,91 @@ const Page = () => {
       }
     }
 
-    const updateFile = async () => {
-      if (!file || !user) {
-        return
-      }
+    const updateImage = async () => {
+      if (!file || !user) return
 
       const { data, error } = await supabase
         .storage
         .from('szkolenia')
-        .upload(`uniqueId`, file)
+        .upload(`${uniqueId}`, file)
 
       if (data) {
-        console.log(data)
+        return data
       }
 
       if (error) {
-        console.log(error)
+        console.error(error)
       }
     }
 
     updateData()
-    updateFile()
+    updateImage()
   }
 
+  // Coś ta funkcja powyżej z dziwną nazwą uploaduje, nie wiem dlaczego jeszcze
+
+  // Rejecting all the changes
   const abortTraining = () => {
-    window.location.reload()
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2563eb',
+      background: `${themeBackground}`,
+      color: `${themeColor}`,
+      title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
+      showConfirmButton: true,
+      confirmButtonText: "Tak",
+      showCancelButton: true,
+      cancelButtonText: "Nie",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push('/admin')
+      }
+    })
+  }
+
+  // Setting file state as selected file from user's device
+  const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setFile(file)
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      if (event.target) {
+        setTempImageUrl(event.target.result as string)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  if (user) {
+    return (
+      <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
+        <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
+          <span>Stwórz nowe szkolenie:</span>
+          <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
+          <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł szkolenie" />
+          <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis szkolenia" />
+          <select className="custom_select" value={aspect} onChange={(e) => setAspect(e.target.value)}>
+            <option value="" disabled className="text-gray">Wybierz rodzaj szkolenia</option>
+            <option value="cywilne" className="text-black">Szkolenie dla osób cywilnych</option>
+            <option value="mundurowe" className="text-black">Szkolenie dla służb mundurowych</option>
+            <option value="proobronne" className="text-black">Szkolenie proobronne</option>
+          </select>
+          <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie szkolenia" width={350} height={350} className="rounded-lg" />
+          <p>Wybierz zdjęcie klikając poniżej:</p>
+          <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
+          <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateTraining(e)}>Stwórz szkolenie</button>
+          <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => abortTraining()}>Odrzuć tworzone szkolenie</button>
+        </div>
+      </main>
+    )
   }
 
   return (
     <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
-        <span>Stwórz nowe szkolenie:</span>
-        <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
-        <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł szkolenia" />
-        <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis szkolenia" />
-        <select value={aspect} className="custom_select" onChange={(e) => setAspect(e.target.value)}>
-          <option value="" className="custom_option" disabled selected>Wybierz rodzaj szkolenia</option>
-          <option value="cywilne" className="custom_option">Dla osób cywilnych</option>
-          <option value="mundurowe" className="custom_option">Dla służb mundurowych</option>
-          <option value="proobronne" className="custom_option">Proobronne</option>
-        </select>
-        <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie szkolenia" width={350} height={350} className="rounded-lg" />
-        <p>Wybierz zdjęcie klikając poniżej:</p>
-        <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
-        <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateTraining(e)}>Stwórz szkolenie</button>
-        <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => abortTraining()}>Odrzuć wprowadzone zmiany</button>
-      </div>
+      <span className="text-2xl">Prawdopodobnie nie powinno cię tu być.</span>
     </main>
   )
 }

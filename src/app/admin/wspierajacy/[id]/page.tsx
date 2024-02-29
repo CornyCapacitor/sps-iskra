@@ -16,13 +16,13 @@ const Page = () => {
   const params = useParams()
   const router = useRouter()
 
-  // News parameters
-  const [data, setData] = useState<News>()
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
+  // Helper parameters
+  const [data, setData] = useState()
+  const [name, setName] = useState("")
+  const [path, setPath] = useState("")
   const [image, setImage] = useState(false)
 
-  // States for displaying and updating* the news image
+  // States for displaying and updating* the helper image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [imageToDelete, setImageToDelete] = useState(false)
@@ -34,17 +34,17 @@ const Page = () => {
   // Fetching data from database
   const fetchData = async () => {
     const { data } = await supabase
-      .from('aktualnosci')
+      .from('wspierajacy')
       .select()
       .eq('id', params.id)
 
     if (data) {
       setData(data[0])
-      setTitle(data[0].title)
-      setDescription(data[0].description)
+      setName(data[0].name)
+      setPath(data[0].path)
       setImage(data[0].image)
       if (data[0].image) {
-        setTempImageUrl(properUrl("aktualnosci", params.id))
+        setTempImageUrl(properUrl("wspierajacy", params.id))
       }
     }
   }
@@ -71,31 +71,93 @@ const Page = () => {
       return
     }
 
-    // Checking if inputs are not empty
-    if (!title || !description) {
-      Swal.fire({
-        icon: 'error',
-        iconColor: '#e71f1f',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Nie wypełniłeś właściwych pól poprawnie.",
-        timer: 5000,
-      })
-      return
-    }
-
-    // If new file is attached, question to user if is sure about that, additional idiot-proof check
-    if (title && description && file) {
+    // If no path attached
+    if (name && !path) {
       Swal.fire({
         icon: 'question',
         iconColor: '#2563eb',
         background: `${themeBackground}`,
         color: `${themeColor}`,
-        title: "Czy na pewno chcesz zaktualizować tę aktualność i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych.",
+        title: "Czy na pewno nie chcesz dodawać linku dla wspierającego?",
         showConfirmButton: true,
         confirmButtonText: "Tak",
         showCancelButton: true,
-        cancelButtonText: "Wróć",
+        cancelButtonText: "Nie",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (!file) {
+            Swal.fire({
+              icon: 'question',
+              iconColor: '#2563eb',
+              background: `${themeBackground}`,
+              color: `${themeColor}`,
+              title: "Czy na pewno chcesz zaktaulizować tego wspierającego?",
+              showConfirmButton: true,
+              confirmButtonText: "Tak",
+              showCancelButton: true,
+              cancelButtonText: "Nie",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                updateChanges()
+                Swal.fire({
+                  icon: 'success',
+                  iconColor: 'green',
+                  background: `${themeBackground}`,
+                  color: `${themeColor}`,
+                  title: "Wspierający zaktualizowany.",
+                  showConfirmButton: true,
+                  confirmButtonText: "Ok",
+                  timer: 5000,
+                }).then(() => {
+                  router.push('/admin')
+                })
+              }
+              return
+            })
+          } else {
+            Swal.fire({
+              icon: 'question',
+              iconColor: '#2563eb',
+              background: `${themeBackground}`,
+              color: `${themeColor}`,
+              title: "Czy na pewno chcesz zaktualizować tego wspierającego i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych.",
+              showConfirmButton: true,
+              confirmButtonText: "Tak",
+              showCancelButton: true,
+              cancelButtonText: "Nie",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                updateChanges()
+                Swal.fire({
+                  icon: 'success',
+                  iconColor: 'green',
+                  background: `${themeBackground}`,
+                  color: `${themeColor}`,
+                  title: "Wspierający zaktualizowany.",
+                  showConfirmButton: true,
+                  confirmButtonText: "Ok",
+                  timer: 5000,
+                }).then(() => {
+                  router.push('/admin')
+                })
+              }
+              return
+            })
+          }
+        }
+      })
+      return
+    } else if (name && path && file) {
+      Swal.fire({
+        icon: 'question',
+        iconColor: '#2563eb',
+        background: `${themeBackground}`,
+        color: `${themeColor}`,
+        title: "Czy na pewno chcesz zaktualizować tego wspierającego i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych.",
+        showConfirmButton: true,
+        confirmButtonText: "Tak",
+        showCancelButton: true,
+        cancelButtonText: "Nie",
       }).then((result) => {
         if (result.isConfirmed) {
           updateChanges()
@@ -104,7 +166,7 @@ const Page = () => {
             iconColor: 'green',
             background: `${themeBackground}`,
             color: `${themeColor}`,
-            title: "Aktualność zaktualizowana.",
+            title: "Wspierający zaktualizowany.",
             showConfirmButton: true,
             confirmButtonText: "Ok",
             timer: 5000,
@@ -114,20 +176,17 @@ const Page = () => {
         }
         return
       })
-    }
-
-    // If everything is attached, without changing the image, additional idiot-proof check
-    if (title && description && !file) {
+    } else if (name && path && !file) {
       Swal.fire({
         icon: 'question',
         iconColor: '#2563eb',
         background: `${themeBackground}`,
         color: `${themeColor}`,
-        title: "Czy na pewno chcesz zaktualizować tę aktualność?",
+        title: "Czy na pewno chcesz zaktaulizować tego wspierającego?",
         showConfirmButton: true,
         confirmButtonText: "Tak",
         showCancelButton: true,
-        cancelButtonText: "Wróć",
+        cancelButtonText: "Nie",
       }).then((result) => {
         if (result.isConfirmed) {
           updateChanges()
@@ -136,7 +195,7 @@ const Page = () => {
             iconColor: 'green',
             background: `${themeBackground}`,
             color: `${themeColor}`,
-            title: "Aktualność zaktualizowana.",
+            title: "Wspierający zaktualizowany.",
             showConfirmButton: true,
             confirmButtonText: "Ok",
             timer: 5000,
@@ -154,10 +213,10 @@ const Page = () => {
     if (!user) return
 
     const { data, error } = await supabase
-      .from('aktualnosci')
+      .from('wspierajacy')
       .update({
-        title: title,
-        description: description,
+        name: name,
+        path: path,
         image: image,
       })
       .eq('id', params.id)
@@ -187,7 +246,7 @@ const Page = () => {
     }
   }
 
-  // Rejecting all the changes and reloading the news edit page
+  // Rejecting all the changes and reloading the helper edit page
   const abortChanges = () => {
     Swal.fire({
       icon: 'question',
@@ -206,8 +265,8 @@ const Page = () => {
     })
   }
 
-  // Handler for delete news and news image
-  const handleDeleteNews = () => {
+  // Handler for delete helper and helper image
+  const handleDeleteHelper = () => {
     // Checking if user's logged on
     if (!user) {
       Swal.fire({
@@ -226,21 +285,21 @@ const Page = () => {
       iconColor: '#2563eb',
       background: `${themeBackground}`,
       color: `${themeColor}`,
-      title: "Czy na pewno chcesz usunąć tę aktualność?",
+      title: "Czy na pewno chcesz usunąć tego wspierającego?",
       showConfirmButton: true,
       confirmButtonText: "Tak",
       showCancelButton: true,
       cancelButtonText: "Wróć",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteNews()
+        deleteHelper()
         deleteImage()
         Swal.fire({
           icon: 'success',
           iconColor: 'green',
           background: `${themeBackground}`,
           color: `${themeColor}`,
-          title: "Aktualność usunięta pomyślnie.",
+          title: "Wspierający usunięty pomyślnie.",
           showConfirmButton: true,
           confirmButtonText: "Ok",
           timer: 5000,
@@ -252,12 +311,12 @@ const Page = () => {
     })
   }
 
-  // Delete news from the database table
-  const deleteNews = async () => {
+  // Delete helper from the database table
+  const deleteHelper = async () => {
     if (!user) return
 
     const { data, error } = await supabase
-      .from('aktualnosci')
+      .from('wspierajacy')
       .delete()
       .eq('id', params.id)
 
@@ -295,7 +354,7 @@ const Page = () => {
       iconColor: '#2563eb',
       background: `${themeBackground}`,
       color: `${themeColor}`,
-      title: "Czy na pewno chcesz usunąć zdjęcie z tej aktualizacji?",
+      title: "Czy na pewno chcesz usunąć zdjęcie tego wspierającego?",
       showConfirmButton: true,
       confirmButtonText: "Tak",
       showCancelButton: true,
@@ -309,13 +368,13 @@ const Page = () => {
     })
   }
 
-  // Delete news image from the storage bucket
+  // Delete helper image from the storage bucket
   const deleteImage = async () => {
     if (!user) return
 
     const { data, error } = await supabase
       .storage
-      .from('aktualnosci')
+      .from('wspierajacy')
       .remove([`${params.id}`])
 
     if (data) {
@@ -327,13 +386,13 @@ const Page = () => {
     }
   }
 
-  // Update news image to the storage bucket
+  // Update helper image to the storage bucket
   const updateImage = async () => {
     if (!file || !user) return
 
     const { data, error } = await supabase
       .storage
-      .from('aktualnosci')
+      .from('wspierajacy')
       .upload(`${params.id}`, file)
 
     if (data) {
@@ -353,15 +412,15 @@ const Page = () => {
           <span>Id: {params.id}</span>
           {data && (
             <>
-              <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł aktualności" />
-              <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis aktualności" />
-              <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie aktualności" width={350} height={350} className="rounded-lg" />
+              <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nazwa wspierającego" />
+              <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={path} onChange={(e) => setPath(e.target.value)} placeholder="Link do wspierającego" />
+              <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie wspierającego" width={350} height={350} className="rounded-lg" />
               <p>Wybierz inne zdjęcie klikając poniżej:</p>
               <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
-              <button className="w-[350px] p-3 rounded-md bg-slate-600 text-white hover:bg-slate-700 focus:outline-none text-center" onClick={() => removeImage()}>Usuń zdjęcie z tej aktualności</button>
+              <button className="w-[350px] p-3 rounded-md bg-slate-600 text-white hover:bg-slate-700 focus:outline-none text-center" onClick={() => removeImage()}>Usuń zdjęcie z tego wspierającego</button>
               <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleUpdateChanges(e)}>Zapisz zmiany</button>
               <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => abortChanges()}>Odrzuć zmiany</button>
-              <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => handleDeleteNews()}>Usuń aktualność</button>
+              <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => handleDeleteHelper()}>Usuń wspierającego</button>
             </>
           )}
         </div>
