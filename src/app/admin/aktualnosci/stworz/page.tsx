@@ -5,6 +5,7 @@ import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+import { changeImage } from "../../utils/changeImage"
 import { errorSwal, questionSwal, toAdminSuccessSwal } from "../../utils/swals"
 
 import supabase from "@/app/config/supabaseClient"
@@ -162,20 +163,24 @@ const Page = () => {
   }
 
   // Setting file state as selected file from user's device
-  const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    setFile(file)
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      if (event.target) {
-        setTempImageUrl(event.target.result as string)
-      }
-    }
-    reader.readAsDataURL(file)
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeImage(e, setFile, setTempImageUrl)
   }
+
+  // const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0]
+  //   if (!file) return
+
+  //   setFile(file)
+
+  //   const reader = new FileReader()
+  //   reader.onload = (event) => {
+  //     if (event.target) {
+  //       setTempImageUrl(event.target.result as string)
+  //     }
+  //   }
+  //   reader.readAsDataURL(file)
+  // }
 
   if (user) {
     return (
@@ -187,7 +192,7 @@ const Page = () => {
           <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis aktualności" />
           <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie aktualności" width={350} height={350} className="rounded-lg" />
           <p>Wybierz zdjęcie klikając poniżej:</p>
-          <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
+          <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={handleChangeImage} />
           <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateNews(e)}>Stwórz aktualność</button>
           <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => abortNews()}>Odrzuć tworzoną aktualność</button>
         </div>
