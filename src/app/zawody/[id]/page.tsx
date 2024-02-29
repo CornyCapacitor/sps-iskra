@@ -30,7 +30,6 @@ const Page = () => {
     if (data) {
       setData(data[0])
       setDate(getProperDate(data[0].created_at))
-      console.log(data)
     }
   }
 

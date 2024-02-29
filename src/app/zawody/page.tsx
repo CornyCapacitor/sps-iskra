@@ -22,7 +22,6 @@ const CompetitionsPage = () => {
         return dateA - dateB
       })
       setCompetitions(sortedData)
-      console.log(data)
     }
   }
 

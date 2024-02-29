@@ -22,7 +22,6 @@ const NewsPage = () => {
         return dateA - dateB
       })
       setNews(sortedData)
-      console.log(data)
     }
   }
 
