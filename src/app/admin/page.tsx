@@ -101,7 +101,12 @@ const AdminPage = () => {
     return (
       <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
         <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
-          <button className="w-[150px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center self-end" onClick={() => handleLogout()}>Wyloguj</button>
+          <div className="self-end flex gap-2">
+            {user.user_metadata.permissions === "yes" && (
+              <Link href="/admin/signup" className="w-[300px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center">Stwórz nowe konto</Link>
+            )}
+            <button className="w-[150px] p-3 rounded-md bg-gray-700 text-white hover:bg-gray-600 focus:outline-none text-center" onClick={() => handleLogout()}>Wyloguj</button>
+          </div>
           {showNews ?
             <>
               <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => setShowNews(false)}>Schowaj aktualności</button>
