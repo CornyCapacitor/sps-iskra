@@ -10,6 +10,9 @@ export const properUrl = (type: string, id: string | string[]) => {
   } else if (type === "zawody") {
     const competitionsImageUrl = `https://mlgdboblxxbeaippvitv.supabase.co/storage/v1/object/public/zawody/${id}`
     return competitionsImageUrl + randomParam
+  } else if (type === "wspierajacy") {
+    const helpersImageUrl = `https://mlgdboblxxbeaippvitv.supabase.co/storage/v1/object/public/wspierajacy/${id}`
+    return helpersImageUrl + randomParam
   }
 
   return ""

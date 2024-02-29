@@ -24,6 +24,7 @@ type Helper = {
   id: string,
   name: string,
   path: string,
+  image: boolean,
   created_at: string,
   who: string,
 }

@@ -38,9 +38,9 @@ export default function Home() {
       <SectionSeparator />
       <section className="flex flex-col items-center p-10 justify-start min-h-[500px]">
         <h1 className="text-3xl">Współpraca</h1>
-        <div className="flex flex-wrap items-center justify-center">
+        <div className="flex flex-wrap items-center justify-center pt-5 gap-5">
           {helpers.map((helper) => (
-            <HelperCard key={helper.id} id={helper.name} name={helper.name} path={helper.path} />
+            <HelperCard key={helper.id} id={helper.id} name={helper.name} path={helper.path} image={helper.image} />
           ))}
         </div>
       </section>

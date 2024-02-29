@@ -201,7 +201,7 @@ const AdminPage = () => {
                 <>
                   <ul className="flex flex-wrap items-center justify-center gap-5">
                     {helpers.map((helper) => (
-                      <Link href="/wspierajacy/[id]" as={`/admin/zawody/${helper.id}`} key={helper.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                      <Link href="/wspierajacy/[id]" as={`/admin/wspierajacy/${helper.id}`} key={helper.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
                         <p>{helper.name}</p>
                         <p>{getProperDate(helper.created_at)} | {helper.who}</p>
                       </Link>
