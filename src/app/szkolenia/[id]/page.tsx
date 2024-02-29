@@ -27,7 +27,6 @@ const Page = () => {
 
     if (data) {
       setData(data[0])
-      console.log(data)
     }
   }
 
