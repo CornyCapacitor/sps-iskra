@@ -42,7 +42,6 @@ const AppCard = ({ id, title, image, created_at, type, }: AppCardProps) => {
         <div className="absolute inset-0 flex flex-col justify-center rounded-lg text-black">
           <h1 className="text-2xl font-bold text-center bg-white opacity-80 py-2">{title}</h1>
           <p className="text-1xl font-bold text-center bg-white opacity-80 py-2">{properDate}</p>
-          <p className="text-1xl font-bold text-center bg-white opacity-80 py-2">{id}</p>
         </div>
       </Link>
     )

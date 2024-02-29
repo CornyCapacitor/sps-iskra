@@ -1,5 +1,6 @@
 'use client'
 
+import { properUrl } from '@/components/properUrl'
 import { spsIskraAuthAtom } from '@/state/atoms'
 import { useAtom } from 'jotai'
 import { useParams, useRouter } from 'next/navigation'
@@ -24,6 +25,7 @@ const Page = () => {
   // States for displaying and updating* the news image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
+  const [imageToDelete, setImageToDelete] = useState(false)
 
   // Swal colours
   const themeBackground = "#000000"
@@ -42,7 +44,7 @@ const Page = () => {
       setDescription(data[0].description)
       setImage(data[0].image)
       if (data[0].image) {
-        setTempImageUrl(`https://mlgdboblxxbeaippvitv.supabase.co/storage/v1/object/public/aktualnosci/${params.id}`)
+        setTempImageUrl(properUrl("aktualnosci", params.id))
       }
     }
   }
@@ -89,7 +91,7 @@ const Page = () => {
         iconColor: '#2563eb',
         background: `${themeBackground}`,
         color: `${themeColor}`,
-        title: "Czy na pewno chcesz zaktualizować tę aktualność i zmienić zdjęcie? Nie będziesz w stanie odzyskać z bazy danych starego zdjęcia.",
+        title: "Czy na pewno chcesz zaktualizować tę aktualność i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych.",
         showConfirmButton: true,
         confirmButtonText: "Tak",
         showCancelButton: true,
@@ -162,20 +164,26 @@ const Page = () => {
       .select()
 
     if (data) {
-      return data
+      if (imageToDelete) {
+        try {
+          deleteImage()
+        } catch (error) {
+          console.error(error)
+        }
+      } else if (file) {
+        try {
+          await deleteImage()
+          await updateImage()
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      return
     }
 
     if (error) {
       console.error(error)
-    }
-
-    if (file) {
-      try {
-        await deleteImage()
-        await updateImage()
-      } catch (error) {
-        console.error(error)
-      }
     }
   }
 
@@ -198,7 +206,7 @@ const Page = () => {
     })
   }
 
-  // Handler for delete news and delete news image
+  // Handler for delete news and news image
   const handleDeleteNews = () => {
     // Checking if user's logged on
     if (!user) {
@@ -268,6 +276,7 @@ const Page = () => {
     if (!file) return
 
     setFile(file)
+    setImageToDelete(false)
 
     const reader = new FileReader()
     reader.onload = (event) => {
@@ -294,6 +303,7 @@ const Page = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setTempImageUrl("")
+        setImageToDelete(true)
         setImage(false)
       }
     })
@@ -319,9 +329,7 @@ const Page = () => {
 
   // Update news image to the storage bucket
   const updateImage = async () => {
-    if (!file || !user) {
-      return
-    }
+    if (!file || !user) return
 
     const { data, error } = await supabase
       .storage
@@ -336,10 +344,6 @@ const Page = () => {
       console.error(error)
     }
   }
-
-  <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
-    <span className="text-2xl">Prawdopodobnie nie powinno cię tu być.</span>
-  </main>
 
   if (user) {
     return (

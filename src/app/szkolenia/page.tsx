@@ -24,14 +24,12 @@ const TrainingsPage = () => {
       setCivilTrainings(civilTrainingsData)
       setUniformedTrainings(uniformedTrainingsData)
       setProDefenseTrainings(proDefenseTrainingsData)
-      // console.log(data)
-      // console.log(civilTrainingsData, uniformedTrainingsData, proDefenseTrainingsData)
     }
   }
 
   useEffect(() => {
     fetchData()
-  })
+  }, [])
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">

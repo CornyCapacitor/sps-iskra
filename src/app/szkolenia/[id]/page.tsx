@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import supabase from "@/app/config/supabaseClient"
+import { properUrl } from "@/components/properUrl"
 import Link from "next/link"
 
 const Page = () => {
@@ -36,7 +37,7 @@ const Page = () => {
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
-      <PageImage imageUrl={`${data ? data.image ? `/${data.image}` : "/aktualnosci-placeholder.jpg" : "/aktualnosci-placeholder.jpg"}`} />
+      <PageImage imageUrl={`${data?.image ? properUrl("szkolenia", params.id) : "/aktualnosci-placeholder.jpg"}`} />
       <section className="flex flex-col flex-wrap gap-5 items-center justify-start p-10 min-h-[500px]">
         <Link className="w-full lg:w-[350px] p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/szkolenia"}>Wróć do szkoleń</Link>
         {data && (

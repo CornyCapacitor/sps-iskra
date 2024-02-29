@@ -1,11 +1,12 @@
 'use client'
 
+import { properUrl } from '@/components/properUrl'
+import { spsIskraAuthAtom } from '@/state/atoms'
+import { useAtom } from 'jotai'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import supabase from '@/app/config/supabaseClient'
-import { spsIskraAuthAtom } from '@/state/atoms'
-import { useAtom } from 'jotai'
 import Image from 'next/image'
 import Link from 'next/link'
 import Swal from 'sweetalert2'
@@ -15,17 +16,22 @@ const Page = () => {
   const params = useParams()
   const router = useRouter()
 
+  // Training parameters
   const [data, setData] = useState<Training>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [aspect, setAspect] = useState("")
+  const [image, setImage] = useState(false)
 
+  // States for displaying and updating* the training image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
-  const [newFile, setNewFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null)
 
+  // Swal colours
   const themeBackground = "#000000"
   const themeColor = "#ffffff"
 
+  // Fetching data from database
   const fetchData = async () => {
     const { data } = await supabase
       .from('szkolenia')
@@ -36,66 +42,140 @@ const Page = () => {
       setData(data[0])
       setTitle(data[0].title)
       setDescription(data[0].description)
+      setImage(data[0].image)
       setAspect(data[0].aspect)
+      if (data[0].image) {
+        setTempImageUrl(properUrl("szkolenia", params.id))
+      }
     }
   }
 
+  // Running fetchData function on page load
   useEffect(() => {
     fetchData()
   }, [])
 
-  const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  // Handler for all the changes update
+  const handleUpdateChanges = async (e: { preventDefault: () => void }) => {
+    e.preventDefault()
 
-    setNewFile(file)
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      if (event.target) {
-        setTempImageUrl(event.target.result as string)
-      }
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const handleUpdateChanges = () => {
-    Swal.fire({
-      icon: 'question',
-      iconColor: '#2563eb',
-      background: `${themeBackground}`,
-      color: `${themeColor}`,
-      title: "Czy na pewno chcesz zaktualizować to szkolenie?",
-      showConfirmButton: true,
-      confirmButtonText: "Tak",
-      showCancelButton: true,
-      cancelButtonText: "Wróć",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        updateChanges()
-        router.push('/admin')
-      }
-      return
-    })
-  }
-
-  const updateChanges = async () => {
+    // Checking if user's logged on
     if (!user) {
+      Swal.fire({
+        icon: 'error',
+        iconColor: '#e71f1f',
+        background: `${themeBackground}`,
+        color: `${themeColor}`,
+        title: "Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.",
+        timer: 5000,
+      })
       return
     }
+
+    // Checking if inputs are not empty
+    if (!title || !description || !aspect) {
+      Swal.fire({
+        icon: 'error',
+        iconColor: '#e71f1f',
+        background: `${themeBackground}`,
+        color: `${themeColor}`,
+        title: "Nie wypełniłeś właściwych pól poprawnie.",
+        timer: 5000,
+      })
+      return
+    }
+
+    // If new file is attached, question to user if is sure about that, additional idiot-proof check
+    if (title && description && file && aspect) {
+      Swal.fire({
+        icon: 'question',
+        iconColor: '#2563eb',
+        background: `${themeBackground}`,
+        color: `${themeColor}`,
+        title: "Czy na pewno chcesz zaktualizować to szkolenie i zmienić zdjęcie? Nie będziesz w stanie odzyskać z bazy danych starego zdjęcia.",
+        showConfirmButton: true,
+        confirmButtonText: "Tak",
+        showCancelButton: true,
+        cancelButtonText: "Wróć",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          updateChanges()
+          Swal.fire({
+            icon: 'success',
+            iconColor: 'green',
+            background: `${themeBackground}`,
+            color: `${themeColor}`,
+            title: "Szkolenie zaktualizowane.",
+            showConfirmButton: true,
+            confirmButtonText: "Ok",
+            timer: 5000,
+          }).then(() => {
+            router.push('/admin')
+          })
+        }
+        return
+      })
+    }
+
+    // If everything is attached, without changing the image, additional idiot-proof check
+    if (title && description && aspect && !file) {
+      Swal.fire({
+        icon: 'question',
+        iconColor: '#2563eb',
+        background: `${themeBackground}`,
+        color: `${themeColor}`,
+        title: "Czy na pewno chcesz zaktualizować to szkolenie?",
+        showConfirmButton: true,
+        confirmButtonText: "Tak",
+        showCancelButton: true,
+        cancelButtonText: "Wróć",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          updateChanges()
+          Swal.fire({
+            icon: 'success',
+            iconColor: 'green',
+            background: `${themeBackground}`,
+            color: `${themeColor}`,
+            title: "Szkolenie zaktualizowane.",
+            showConfirmButton: true,
+            confirmButtonText: "Ok",
+            timer: 5000,
+          }).then(() => {
+            router.push('/admin')
+          })
+        }
+        return
+      })
+    }
+  }
+
+  // Updating the changes
+  const updateChanges = async () => {
+    if (!user) return
 
     const { data, error } = await supabase
       .from('szkolenia')
       .update({
         title: title,
         description: description,
+        image: image,
         aspect: aspect,
       })
       .eq('id', params.id)
       .select()
 
     if (data) {
-      return data
+      if (file) {
+        try {
+          await deleteImage()
+          await updateImage()
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      return
     }
 
     if (error) {
@@ -103,11 +183,40 @@ const Page = () => {
     }
   }
 
+  // Rejecting all the changes and reloading the training edit page
   const abortChanges = () => {
-    window.location.reload()
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2563eb',
+      background: `${themeBackground}`,
+      color: `${themeColor}`,
+      title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
+      showConfirmButton: true,
+      confirmButtonText: "Tak",
+      showCancelButton: true,
+      cancelButtonText: "Nie",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push('/admin')
+      }
+    })
   }
 
-  const handleDeleteNews = () => {
+  // Handler for delete training and training image
+  const handleDeleteTraining = () => {
+    // Checking if user's logged on
+    if (!user) {
+      Swal.fire({
+        icon: 'error',
+        iconColor: '#e71f1f',
+        background: `${themeBackground}`,
+        color: `${themeColor}`,
+        title: "Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.",
+        timer: 5000,
+      })
+      return
+    }
+
     Swal.fire({
       icon: 'question',
       iconColor: '#2563eb',
@@ -121,16 +230,27 @@ const Page = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTraining()
-        router.push('/admin')
+        deleteImage()
+        Swal.fire({
+          icon: 'success',
+          iconColor: 'green',
+          background: `${themeBackground}`,
+          color: `${themeColor}`,
+          title: "Szkolenie usunięte pomyślnie.",
+          showConfirmButton: true,
+          confirmButtonText: "Ok",
+          timer: 5000,
+        }).then(() => {
+          router.push('/admin')
+        })
       }
       return
     })
   }
 
+  // Delete training from the database table
   const deleteTraining = async () => {
-    if (!user) {
-      return
-    }
+    if (!user) return
 
     const { data, error } = await supabase
       .from('szkolenia')
@@ -146,24 +266,116 @@ const Page = () => {
     }
   }
 
+  // Setting file state as selected file from user's device
+  const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setFile(file)
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      if (event.target) {
+        setTempImageUrl(event.target.result as string)
+        setImage(true)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  // Setting the image to be removed locally
+  const removeImage = () => {
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2563eb',
+      background: `${themeBackground}`,
+      color: `${themeColor}`,
+      title: "Czy na pewno chcesz usunąć zdjęcie z tego szkolenia?",
+      showConfirmButton: true,
+      confirmButtonText: "Tak",
+      showCancelButton: true,
+      cancelButtonText: "Nie",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setTempImageUrl("")
+        setImage(false)
+      }
+    })
+  }
+
+  // Delete training image from the storage bucket
+  const deleteImage = async () => {
+    if (!user) return
+
+    const { data, error } = await supabase
+      .storage
+      .from('szkolenia')
+      .remove([`${params.id}`])
+
+    if (data) {
+      return data
+    }
+
+    if (error) {
+      console.error(error)
+    }
+  }
+
+  // Update training image to the storage bucket
+  const updateImage = async () => {
+    if (!file || !user) return
+
+    const { data, error } = await supabase
+      .storage
+      .from('szkolenia')
+      .upload(`${params.id}`, file)
+
+    if (data) {
+      return data
+    }
+
+    if (error) {
+      console.error(error)
+    }
+  }
+
+  <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
+    <span className="text-2xl">Prawdopodobnie nie powinno cię tu być.</span>
+  </main>
+
+  if (user) {
+    return (
+      <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
+        <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
+          <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
+          <span>Id: {params.id}</span>
+          {data && (
+            <>
+              <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł szkolenia" />
+              <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis szkolenia" />
+              <select className="custom_select" value={aspect} onChange={(e) => setAspect(e.target.value)}>
+                <option value="" disabled className="text-gray">Wybierz rodzaj szkolenia</option>
+                <option value="cywilne" className="text-black">Szkolenie dla osób cywilnych</option>
+                <option value="mundurowe" className="text-black">Szkolenie dla służb mundurowych</option>
+                <option value="proobronne" className="text-black">Szkolenie proobronne</option>
+              </select>
+              <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie szkolenia" width={350} height={350} className="rounded-lg" />
+              <p>Wybierz inne zdjęcie klikając poniżej:</p>
+              <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
+              <button className="w-[350px] p-3 rounded-md bg-slate-600 text-white hover:bg-slate-700 focus:outline-none text-center" onClick={() => removeImage()}>Usuń zdjęcie z tego szkolenia</button>
+              <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleUpdateChanges(e)}>Zapisz zmiany</button>
+              <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => abortChanges()}>Odrzuć zmiany</button>
+              <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => handleDeleteTraining()}>Usuń szkolenie</button>
+            </>
+          )}
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="pt-[300px] min-h-screen flex items-start justify-center bg-gray-800 p-6 text-white text-center">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-md w-[95%] flex flex-col items-center justify-center gap-5">
-        <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
-        <span>Id: {params.id}</span>
-        {data && (
-          <>
-            <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł szkolenia" />
-            <textarea className="w-[350px] min-h-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 scrollbar_hidden" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opis szkolenia" />
-            <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie szkolenia" width={350} height={350} className="rounded-lg" />
-            <p>Wybierz inne zdjęcie klikając poniżej:</p>
-            <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
-            <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={() => handleUpdateChanges()}>Zapisz zmiany</button>
-            <button className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center" onClick={() => abortChanges()}>Odrzuć zmiany</button>
-            <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => handleDeleteNews()}>Usuń szkolenie</button>
-          </>
-        )}
-      </div>
+      <span className="text-2xl">Prawdopodobnie nie powinno cię tu być.</span>
     </main>
   )
 }
