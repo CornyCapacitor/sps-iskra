@@ -248,7 +248,7 @@ const Page = () => {
           <Link href="/admin" className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center">Wróć do panelu administratora</Link>
           <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nazwa wspierającego" />
           <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={path} onChange={(e) => setPath(e.target.value)} placeholder="Link do wspierającego" />
-          <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie wspierającego" width={350} height={350} className="rounded-lg" />
+          <Image src={tempImageUrl || ""} alt="Zdjęcie wspierającego" width={350} height={350} className="rounded-lg" />
           <p>Wybierz zdjęcie klikając poniżej:</p>
           <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
           <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateHelper(e)}>Dodaj wspierającego</button>
