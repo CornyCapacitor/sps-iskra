@@ -5,10 +5,11 @@ import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+import { errorSwal, questionSwal, toAdminSuccessSwal } from "../../utils/swals"
+
 import supabase from "@/app/config/supabaseClient"
 import Image from "next/image"
 import Link from "next/link"
-import Swal from "sweetalert2"
 
 const Page = () => {
   const [user] = useAtom(spsIskraAuthAtom)
@@ -22,78 +23,63 @@ const Page = () => {
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
 
-  // Swal colours
-  const themeBackground = "#000000"
-  const themeColor = "#ffffff"
-
   // Handler for create news and upload news image
   const handleCreateNews = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
     // Checking if user's logged on
     if (!user) {
-      Swal.fire({
-        icon: 'error',
-        iconColor: '#e71f1f',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.",
-        timer: 5000,
-      })
-      return
+      errorSwal("Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.")
     }
 
     // Checking if inputs are not empty
     if (!title || !description) {
-      Swal.fire({
-        icon: 'error',
-        iconColor: '#e71f1f',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Nie wypełniłeś właściwych pól poprawnie.",
-        timer: 5000,
-      })
-      return
+      errorSwal("Nie wypełniłeś właściwych pól poprawnie.")
     }
 
     // Checking if user wants to create news without image attached
     if (title && description && !file) {
-      Swal.fire({
-        icon: 'question',
-        iconColor: '#2563eb',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?",
-        showConfirmButton: true,
-        confirmButtonText: "Tak",
-        showCancelButton: true,
-        cancelButtonText: "Nie",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          createNews()
-        }
-        return
-      })
+      questionSwal("Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?", "Tak", "Nie", createNews)
+
+      // Swal.fire({
+      //   icon: 'question',
+      //   iconColor: '#2563eb',
+      //   background: `${themeBackground}`,
+      //   color: `${themeColor}`,
+      //   title: "Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?",
+      //   showConfirmButton: true,
+      //   confirmButtonText: "Tak",
+      //   showCancelButton: true,
+      //   cancelButtonText: "Nie",
+      // }).then((result) => {
+      //   if (result.isConfirmed) {
+      //     createNews()
+      //   }
+      //   return
+      // })
     }
 
     // If everything is attached, additional idiot-proof check
     if (title && description && file) {
-      Swal.fire({
-        icon: 'question',
-        iconColor: '#2563eb',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?",
-        showConfirmButton: true,
-        confirmButtonText: "Tak",
-        showCancelButton: true,
-        cancelButtonText: "Nie",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          createNews()
-        }
-        return
-      })
+      questionSwal("Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?", "Tak", "Nie", createNews)
+
+      //   Swal.fire({
+      //     icon: 'question',
+      //     iconColor: '#2563eb',
+      //     background: `${themeBackground}`,
+      //     color: `${themeColor}`,
+      //     title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?",
+      //     showConfirmButton: true,
+      //     confirmButtonText: "Tak",
+      //     showCancelButton: true,
+      //     cancelButtonText: "Nie",
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       createNews()
+      //     }
+      //     return
+      //   })
+      // }
     }
   }
 
@@ -113,61 +99,66 @@ const Page = () => {
         .select()
 
       if (data) {
-        Swal.fire({
-          icon: 'success',
-          iconColor: 'green',
-          background: `${themeBackground}`,
-          color: `${themeColor}`,
-          title: "Opublikowano nową aktualność pomyślnie.",
-          showConfirmButton: true,
-          confirmButtonText: "Ok",
-          timer: 5000,
-        }).then((result) => {
-          if (result.isConfirmed || result.dismiss) {
-            router.push('/admin')
-          }
-        })
+        toAdminSuccessSwal("Opublikowano nową aktualność pomyślnie.", () => { router.push('/admin') })
+
+        // Swal.fire({
+        //   icon: 'success',
+        //   iconColor: 'green',
+        //   background: `${themeBackground}`,
+        //   color: `${themeColor}`,
+        //   title: "Opublikowano nową aktualność pomyślnie.",
+        //   showConfirmButton: true,
+        //   confirmButtonText: "Ok",
+        //   timer: 5000,
+        // }).then((result) => {
+        //   if (result.isConfirmed || result.dismiss) {
+        //     router.push('/admin')
+        //   }
+        // })
+
       }
+
+      const updateImage = async () => {
+        if (!file || !user) return
+
+        const { data, error } = await supabase
+          .storage
+          .from('aktualnosci')
+          .upload(`${uniqueId}`, file)
+
+        if (data) {
+          return data
+        }
+
+        if (error) {
+          console.error(error)
+        }
+      }
+
+      updateData()
+      updateImage()
     }
-
-    const updateImage = async () => {
-      if (!file || !user) return
-
-      const { data, error } = await supabase
-        .storage
-        .from('aktualnosci')
-        .upload(`${uniqueId}`, file)
-
-      if (data) {
-        return data
-      }
-
-      if (error) {
-        console.error(error)
-      }
-    }
-
-    updateData()
-    updateImage()
   }
 
   // Rejecting all the changes
   const abortNews = () => {
-    Swal.fire({
-      icon: 'question',
-      iconColor: '#2563eb',
-      background: `${themeBackground}`,
-      color: `${themeColor}`,
-      title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
-      showConfirmButton: true,
-      confirmButtonText: "Tak",
-      showCancelButton: true,
-      cancelButtonText: "Nie",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push('/admin')
-      }
-    })
+    questionSwal("Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.", "Tak", "Nie", () => { router.push('/admin') })
+
+    // Swal.fire({
+    //   icon: 'question',
+    //   iconColor: '#2563eb',
+    //   background: `${themeBackground}`,
+    //   color: `${themeColor}`,
+    //   title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
+    //   showConfirmButton: true,
+    //   confirmButtonText: "Tak",
+    //   showCancelButton: true,
+    //   cancelButtonText: "Nie",
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     router.push('/admin')
+    //   }
+    // })
   }
 
   // Setting file state as selected file from user's device

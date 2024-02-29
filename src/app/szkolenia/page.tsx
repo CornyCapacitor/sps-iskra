@@ -12,22 +12,22 @@ const TrainingsPage = () => {
   const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
   const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
 
-  const fetchData = async () => {
-    const { data } = await supabase
-      .from('szkolenia')
-      .select()
-
-    if (data) {
-      const civilTrainingsData = data.filter(training => training.aspect === 'cywilne')
-      const uniformedTrainingsData = data.filter(training => training.aspect === 'mundurowe')
-      const proDefenseTrainingsData = data.filter(training => training.aspect === 'proobronne')
-      setCivilTrainings(civilTrainingsData)
-      setUniformedTrainings(uniformedTrainingsData)
-      setProDefenseTrainings(proDefenseTrainingsData)
-    }
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await supabase
+        .from('szkolenia')
+        .select()
+
+      if (data) {
+        const civilTrainingsData = data.filter(training => training.aspect === 'cywilne')
+        const uniformedTrainingsData = data.filter(training => training.aspect === 'mundurowe')
+        const proDefenseTrainingsData = data.filter(training => training.aspect === 'proobronne')
+        setCivilTrainings(civilTrainingsData)
+        setUniformedTrainings(uniformedTrainingsData)
+        setProDefenseTrainings(proDefenseTrainingsData)
+      }
+    }
+
     fetchData()
   }, [])
 

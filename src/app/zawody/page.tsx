@@ -9,23 +9,23 @@ import supabase from "../config/supabaseClient"
 const CompetitionsPage = () => {
   const [competitions, setCompetitions] = useState<Competition[]>([])
 
-  const fetchData = async () => {
-    const { data } = await supabase
-      .from('zawody')
-      .select()
-
-    if (data) {
-      // Sorting by timestamp
-      const sortedData = data.sort((a, b) => {
-        const dateA = new Date(a.created_at).getTime()
-        const dateB = new Date(b.created_at).getTime();
-        return dateA - dateB
-      })
-      setCompetitions(sortedData)
-    }
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await supabase
+        .from('zawody')
+        .select()
+
+      if (data) {
+        // Sorting by timestamp
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.created_at).getTime()
+          const dateB = new Date(b.created_at).getTime();
+          return dateA - dateB
+        })
+        setCompetitions(sortedData)
+      }
+    }
+
     fetchData()
   }, [])
 

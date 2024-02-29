@@ -21,21 +21,21 @@ const Page = () => {
     }
   }, [data])
 
-  const fetchData = async () => {
-    const { data } = await supabase
-      .from('zawody')
-      .select()
-      .eq('id', params.id)
-
-    if (data) {
-      setData(data[0])
-      setDate(getProperDate(data[0].created_at))
-    }
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await supabase
+        .from('zawody')
+        .select()
+        .eq('id', params.id)
+
+      if (data) {
+        setData(data[0])
+        setDate(getProperDate(data[0].created_at))
+      }
+    }
+
     fetchData()
-  }, [])
+  }, [params.id])
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">

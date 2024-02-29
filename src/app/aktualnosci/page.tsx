@@ -9,23 +9,27 @@ import supabase from "../config/supabaseClient"
 const NewsPage = () => {
   const [news, setNews] = useState<News[]>([])
 
-  const fetchData = async () => {
-    const { data } = await supabase
-      .from('aktualnosci')
-      .select()
-
-    if (data) {
-      // Sorting by timestamp
-      const sortedData = data.sort((a, b) => {
-        const dateA = new Date(a.created_at).getTime()
-        const dateB = new Date(b.created_at).getTime();
-        return dateA - dateB
-      })
-      setNews(sortedData)
-    }
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase
+        .from('aktualnosci')
+        .select()
+
+      if (data) {
+        // Sorting by timestamp
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.created_at).getTime()
+          const dateB = new Date(b.created_at).getTime();
+          return dateA - dateB
+        })
+        setNews(sortedData)
+      }
+
+      if (error) {
+        console.error(error)
+      }
+    }
+
     fetchData()
   }, [])
 

@@ -10,20 +10,24 @@ import HelperCard from "@/components/HelperCard";
 import supabase from "./config/supabaseClient";
 
 export default function Home() {
-  const [cards, setCards] = useState<Card[]>(cardsData)
+  const [cards] = useState<Card[]>(cardsData)
   const [helpers, setHelpers] = useState<Helper[]>([])
 
-  const fetchHelpers = async () => {
-    const { data } = await supabase
-      .from('wspierajacy')
-      .select()
-
-    if (data) {
-      setHelpers(data)
-    }
-  }
-
   useEffect(() => {
+    const fetchHelpers = async () => {
+      const { data, error } = await supabase
+        .from('wspierajacy')
+        .select()
+
+      if (data) {
+        setHelpers(data)
+      }
+
+      if (error) {
+        console.error(error)
+      }
+    }
+
     fetchHelpers()
   }, [])
 
