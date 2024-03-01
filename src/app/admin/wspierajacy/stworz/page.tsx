@@ -4,154 +4,52 @@ import { spsIskraAuthAtom } from "@/state/atoms"
 import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { changeImage } from "../../utils/changeImage"
+import { createData } from "../../utils/createData"
+import { errorSwal, questionSwal, toAdminSuccessSwal } from "../../utils/swals"
+import { uploadImage } from "../../utils/uploadImage"
 
-import supabase from "@/app/config/supabaseClient"
 import Image from "next/image"
 import Link from "next/link"
-import Swal from "sweetalert2"
 
 const Page = () => {
   const [user] = useAtom(spsIskraAuthAtom)
   const router = useRouter()
 
-  // Helper parameters
   const [name, setName] = useState("")
   const [path, setPath] = useState("")
 
-  // States for displaying and updating* the helper image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
 
-  // Swal colours
-  const themeBackground = "#000000"
-  const themeColor = "#ffffff"
-
-  // Handler for create helper and upload training image
   const handleCreateHelper = async (e: { preventDefault: VoidFunction }) => {
     e.preventDefault()
 
-    // Checking if user's logged on
-    if (!user) {
-      Swal.fire({
-        icon: 'error',
-        iconColor: '#e71f1f',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.",
-        timer: 5000,
-      })
-      return
-    }
+    if (!user) { errorSwal("Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.") }
 
-    // Checking if there's name provided
     if (!name) {
-      Swal.fire({
-        icon: 'error',
-        iconColor: '#e71f1f',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Musisz nadać wspierającemu jakąś nazwę.",
-        timer: 5000,
-      })
-      return
+      errorSwal("Musisz nadać wspierającemu jakąś nazwę.")
     }
 
-    // If no path attached
-    if (name && !path) {
-      Swal.fire({
-        icon: 'question',
-        iconColor: '#2563eb',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Czy na pewno nie chcesz dodawać linku dla wspierającego?",
-        showConfirmButton: true,
-        confirmButtonText: "Tak",
-        showCancelButton: true,
-        cancelButtonText: "Nie",
-      }).then((result) => {
-        if (result.isConfirmed) {
+    if (name) {
+      if (!path) {
+        questionSwal("Czy na pewno nie chcesz dodawać linku dla wspierającego?", "Tak", "Nie", () => {
           if (!file) {
-            Swal.fire({
-              icon: 'question',
-              iconColor: '#2563eb',
-              background: `${themeBackground}`,
-              color: `${themeColor}`,
-              title: "Czy na pewno nie chcesz załączać zdjęcia do wspierającego?",
-              showConfirmButton: true,
-              confirmButtonText: "Tak",
-              showCancelButton: true,
-              cancelButtonText: "Nie",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                createHelper()
-              }
-              return
-            })
+            questionSwal("Czy na pewno nie chcesz załączać zdjęcia do wspierającego?", "Tak", "Nie", createHelper)
           } else {
-            Swal.fire({
-              icon: 'question',
-              iconColor: '#2563eb',
-              background: `${themeBackground}`,
-              color: `${themeColor}`,
-              title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz dodać nowego wspierającego?",
-              showConfirmButton: true,
-              confirmButtonText: "Tak",
-              showCancelButton: true,
-              cancelButtonText: "Nie",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                createHelper()
-              }
-              return
-            })
+            questionSwal("Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz dodać nowego wspierającego?", "Tak", "Nie", createHelper)
           }
+        })
+      } else {
+        if (!file) {
+          questionSwal("Czy na pewno nie chcesz załączać zdjęcia do wspierającego?", "Tak", "Nie", createHelper)
+        } else {
+          questionSwal("Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz dodać nowego wspierającego?", "Tak", "Nie", createHelper)
         }
-      })
-      return
-    }
-
-    // Checking if user wants to create helper without image attached
-    if (name && path && !file) {
-      Swal.fire({
-        icon: 'question',
-        iconColor: '#2563eb',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Czy na pewno nie chcesz załączać zdjęcia do wspierającego?",
-        showConfirmButton: true,
-        confirmButtonText: "Tak",
-        showCancelButton: true,
-        cancelButtonText: "Nie",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          createHelper()
-        }
-        return
-      })
-    }
-
-    // If everything is attached, additional idiot-proof check
-    if (name && path && file) {
-      Swal.fire({
-        icon: 'question',
-        iconColor: '#2563eb',
-        background: `${themeBackground}`,
-        color: `${themeColor}`,
-        title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz dodać nowego wspierającego?",
-        showConfirmButton: true,
-        confirmButtonText: "Tak",
-        showCancelButton: true,
-        cancelButtonText: "Nie",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          createHelper()
-        }
-        return
-      })
+      }
     }
   }
 
-  // Creating helper based on user changes
   const createHelper = () => {
     if (!user) return
 
@@ -160,84 +58,23 @@ const Page = () => {
 
     const updateValue = { id: uniqueId, name: name, path: path, who: user.user_metadata?.username, image: file ? true : false }
 
-    const updateData = async () => {
-      const { data } = await supabase
-        .from('wspierajacy')
-        .insert(updateValue)
-        .select()
-
-      if (data) {
-        Swal.fire({
-          icon: 'success',
-          iconColor: 'green',
-          background: `${themeBackground}`,
-          color: `${themeColor}`,
-          title: "Dodano nowego wspierającego.",
-          showConfirmButton: true,
-          confirmButtonText: "Ok",
-          timer: 5000,
-        }).then((result) => {
-          if (result.isConfirmed || result.dismiss) {
-            router.push('/admin')
-          }
-        })
-      }
+    const successCallback = () => {
+      toAdminSuccessSwal("Dodano nowego wspierającego.", () => router.push('/admin'))
     }
 
-    const updateImage = async () => {
-      if (!file || !user) return
+    createData("wspierajacy", updateValue, successCallback)
 
-      const { data, error } = await supabase
-        .storage
-        .from('wspierajacy')
-        .upload(`${uniqueId}`, file)
-
-      if (data) {
-        return data
-      }
-
-      if (error) {
-        console.error(error)
-      }
+    if (file) {
+      uploadImage("wspierajacy", uniqueId, file)
     }
-
-    updateData()
-    updateImage()
   }
 
-  // Rejecting all the changes
   const abortTraining = () => {
-    Swal.fire({
-      icon: 'question',
-      iconColor: '#2563eb',
-      background: `${themeBackground}`,
-      color: `${themeColor}`,
-      title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
-      showConfirmButton: true,
-      confirmButtonText: "Tak",
-      showCancelButton: true,
-      cancelButtonText: "Nie",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push('/admin')
-      }
-    })
+    questionSwal("Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.", "Tak", "Nie", () => { router.push('/admin') })
   }
 
-  // Setting file state as selected file from user's device
-  const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    setFile(file)
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      if (event.target) {
-        setTempImageUrl(event.target.result as string)
-      }
-    }
-    reader.readAsDataURL(file)
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeImage(e, setFile, setTempImageUrl)
   }
 
   if (user) {
@@ -250,7 +87,7 @@ const Page = () => {
           <input className="w-[350px] p-3 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" value={path} onChange={(e) => setPath(e.target.value)} placeholder="Link do wspierającego" />
           <Image src={tempImageUrl || ""} alt="Zdjęcie wspierającego" width={350} height={350} className="rounded-lg" />
           <p>Wybierz zdjęcie klikając poniżej:</p>
-          <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={changeImage} />
+          <input type="file" className="w-[350px] flex items-center justify-center text-center" onChange={handleChangeImage} />
           <button className="w-[350px] p-3 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none text-center" onClick={(e) => handleCreateHelper(e)}>Dodaj wspierającego</button>
           <button className="w-[350px] p-3 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none text-center" onClick={() => abortTraining()}>Odrzuć tworzonego wspierającego</button>
         </div>
