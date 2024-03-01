@@ -61,12 +61,12 @@ const Page = () => {
         questionSwal("Czy na pewno nie chcesz dodawać linku dla wspierającego?", "Tak", "Nie", () => {
           if (!file) {
             questionSwal("Czy na pewno chcesz zaktaulizować tego wspierającego?", "Tak", "Nie", () => {
-              updateChanges
+              updateChanges()
               toAdminSuccessSwal("Wspierający zaktualizowany.", () => { router.push('/admin') })
             })
           } else {
             questionSwal("Czy na pewno chcesz zaktualizować tego wspierającego i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych.", "Tak", "Nie", () => {
-              updateChanges
+              updateChanges()
               toAdminSuccessSwal("Wspierający zaktualizowany.", () => { router.push('/admin') })
             })
           }
@@ -74,12 +74,12 @@ const Page = () => {
       } else {
         if (!file) {
           questionSwal("Czy na pewno chcesz zaktaulizować tego wspierającego?", "Tak", "Nie", () => {
-            updateChanges
+            updateChanges()
             toAdminSuccessSwal("Wspierający zaktualizowany.", () => { router.push('/admin') })
           })
         } else {
           questionSwal("Czy na pewno chcesz zaktualizować tego wspierającego i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych.", "Tak", "Nie", () => {
-            updateChanges
+            updateChanges()
             toAdminSuccessSwal("Wspierający zaktualizowany.", () => { router.push('/admin') })
           })
         }

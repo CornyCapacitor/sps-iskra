@@ -62,7 +62,7 @@ const Page = () => {
 
     if (title && description && aspect) {
       questionSwal(`${file ? "Czy na pewno chcesz zaktualizować to szkolenie i zmienić zdjęcie? Nie będziesz w stanie odzyskać z bazy danych starego zdjęcia." : "Czy na pewno chcesz zaktualizować to szkolenie?"}`, "Tak", "Wróć", () => {
-        updateChanges
+        updateChanges()
         toAdminSuccessSwal("Aktualnośc zaktualizowana.", () => router.push('/admin'))
       })
     }

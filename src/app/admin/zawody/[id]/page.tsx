@@ -60,7 +60,7 @@ const Page = () => {
 
     if (title && description) {
       questionSwal(`${file ? "Czy na pewno chcesz zaktualizować ten komunikat i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych." : "Czy na pewno chcesz zaktualizować ten komunikat?"}`, "Tak", "Wróć", () => {
-        updateChanges
+        updateChanges()
         toAdminSuccessSwal("Komunikat zaktualizowany.", () => router.push('/admin'))
       })
     }

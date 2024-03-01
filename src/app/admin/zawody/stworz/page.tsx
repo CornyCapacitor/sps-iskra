@@ -29,7 +29,7 @@ const Page = () => {
 
     if (!title || !description) { errorSwal("Nie wypełniłeś właściwych pól poprawnie.") }
 
-    if (title && description && !file) { questionSwal("Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?", "Tak", "Nie", createCompetition) }
+    if (title && description && !file) { questionSwal("Czy na pewno nie chcesz załączać zdjęcia do tego komunikatu?", "Tak", "Nie", createCompetition) }
 
     if (title && description && file) { questionSwal("Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzony komunikat?", "Tak", "Nie", createCompetition) }
   }
