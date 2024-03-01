@@ -39,7 +39,7 @@ const Page = () => {
 
   return (
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
-      <PageImage imageUrl={`${data?.image ? properUrl("aktualnosci", params.id) : "/aktualnosci-placeholder.jpg"}`} />
+      <PageImage imageUrl={`${data?.image ? properUrl("aktualnosci", params.id) : "/news.jpg"}`} />
       <section className="flex flex-col flex-wrap gap-5 items-center justify-start p-10 min-h-[500px]">
         <Link className="w-full lg:w-[350px] p-3 rounded-md bg-gray-800 text-white hover:bg-gray-600 focus:outline-none text-center" href={"/aktualnosci"}>Wróć do aktualności</Link>
         {data && (
