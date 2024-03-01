@@ -61,7 +61,7 @@ const Page = () => {
     if (title && description) {
       questionSwal(`${file ? "Czy na pewno chcesz zaktualizować tę aktualność i zmienić zdjęcie? W przypadku zmiany zdjęcia na nowe, nie będziesz w stanie odzyskać starego zdjęcia z bazy danych." : "Czy na pewno chcesz zaktualizować tę aktualność?"}`, "Tak", "Wróć", () => {
         updateChanges
-        toAdminSuccessSwal("Opublikowano nową aktualność pomyślnie.", () => router.push('/admin'))
+        toAdminSuccessSwal("Aktualnośc zaktualizowana.", () => router.push('/admin'))
       })
     }
   }
