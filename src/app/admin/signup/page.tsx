@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import Link from 'next/link'
-import Swal from 'sweetalert2'
+import { toAdminSuccessSwal } from '../utils/swals'
 
 const SignupPage = () => {
   const [user] = useAtom(spsIskraAuthAtom)
@@ -73,18 +73,7 @@ const SignupPage = () => {
         })
         setEmail('')
         setPassword('')
-        Swal.fire({
-          title: "Gratulacje!",
-          text: "Udało ci się pomyślnie założyć konto. Proszę sprawdź swoją skrzynkę e-mail, aby autoryzować swoje konto, w przeciwnym razie nie będziesz mógł zalogować się poprawnie.",
-          icon: "success",
-          color: "#fff",
-          background: "#111827",
-          confirmButtonText: "Powrót do logowania"
-        }).then((result) => {
-          if (result.isConfirmed || result.dismiss) {
-            router.push('/admin/login')
-          }
-        })
+        toAdminSuccessSwal("Udało ci się pomyślnie założyć konto. Proszę sprawdź swoją skrzynkę e-mail, aby autoryzować swoje konto, w przeciwnym razie nie będziesz mógł zalogować się poprawnie.", () => { router.push('/admin') })
       } catch (error) {
         console.error(error)
       }
