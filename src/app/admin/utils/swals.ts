@@ -34,7 +34,7 @@ export const questionSwal = (title: string, confirmText: string, cancelText: str
   })
 }
 
-export const toAdminSuccessSwal = (title: string, resultFunc: () => void) => {
+export const toAdminSuccessSwal = (title: string, resultFunc: VoidFunction) => {
   Swal.fire({
     icon: 'success',
     iconColor: 'green',

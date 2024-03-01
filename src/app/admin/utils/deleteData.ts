@@ -1,11 +1,10 @@
 import supabase from "@/app/config/supabaseClient"
 
-export const uploadImage = async (bucketName: string, id: string | string[], file: File) => {
-
+export const deleteData = async (databaseName: string, id: string | string[]) => {
   const { data, error } = await supabase
-    .storage
-    .from(bucketName)
-    .upload(`${id}`, file)
+    .from(databaseName)
+    .delete()
+    .eq('id', id)
 
   if (data) {
     return data
