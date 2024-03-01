@@ -5,16 +5,16 @@ import { spsIskraAuthAtom } from '@/state/atoms'
 import { useAtom } from 'jotai'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-
-import supabase from '@/app/config/supabaseClient'
-import Image from 'next/image'
-import Link from 'next/link'
 import { changeImage } from '../../utils/changeImage'
 import { deleteData } from '../../utils/deleteData'
 import { deleteImage } from '../../utils/deleteImage'
 import { removeImageLocally } from '../../utils/removeImageLocally'
 import { errorSwal, questionSwal, toAdminSuccessSwal } from '../../utils/swals'
 import { uploadImage } from '../../utils/uploadImage'
+
+import supabase from '@/app/config/supabaseClient'
+import Image from 'next/image'
+import Link from 'next/link'
 
 const Page = () => {
   const [user] = useAtom(spsIskraAuthAtom)
@@ -131,43 +131,6 @@ const Page = () => {
       setImage(false)
     })
   }
-
-  // const removeImage = () => {
-  //   Swal.fire({
-  //     icon: 'question',
-  //     iconColor: '#2563eb',
-  //     background: `${themeBackground}`,
-  //     color: `${themeColor}`,
-  //     title: "Czy na pewno chcesz usunąć zdjęcie z tej aktualizacji?",
-  //     showConfirmButton: true,
-  //     confirmButtonText: "Tak",
-  //     showCancelButton: true,
-  //     cancelButtonText: "Nie",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       setTempImageUrl("")
-  //       setImageToDelete(true)
-  //       setImage(false)
-  //     }
-  //   })
-  // }
-
-  // const updateImage = async () => {
-  //   if (!file || !user) return
-
-  //   const { data, error } = await supabase
-  //     .storage
-  //     .from('aktualnosci')
-  //     .upload(`${params.id}`, file)
-
-  //   if (data) {
-  //     return data
-  //   }
-
-  //   if (error) {
-  //     console.error(error)
-  //   }
-  // }
 
   if (user) {
     return (
