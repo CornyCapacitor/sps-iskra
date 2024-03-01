@@ -22,7 +22,7 @@ const Page = () => {
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
 
-  const handleCreateCompetition = async (e: { preventDefault: () => void }) => {
+  const handleCreateCompetition = async (e: { preventDefault: VoidFunction }) => {
     e.preventDefault()
 
     if (!user) { errorSwal("Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.") }

@@ -51,7 +51,7 @@ const Page = () => {
     fetchData()
   }, [params.id])
 
-  const handleUpdateChanges = async (e: { preventDefault: () => void }) => {
+  const handleUpdateChanges = async (e: { preventDefault: VoidFunction }) => {
     e.preventDefault()
 
     if (!user) { errorSwal("Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.") }

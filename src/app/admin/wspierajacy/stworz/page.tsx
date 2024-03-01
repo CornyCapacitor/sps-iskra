@@ -27,7 +27,7 @@ const Page = () => {
   const themeColor = "#ffffff"
 
   // Handler for create helper and upload training image
-  const handleCreateHelper = async (e: { preventDefault: () => void }) => {
+  const handleCreateHelper = async (e: { preventDefault: VoidFunction }) => {
     e.preventDefault()
 
     // Checking if user's logged on

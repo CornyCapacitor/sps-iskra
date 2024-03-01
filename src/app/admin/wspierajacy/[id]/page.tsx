@@ -55,7 +55,7 @@ const Page = () => {
   }, [])
 
   // Handler for all the changes update
-  const handleUpdateChanges = async (e: { preventDefault: () => void }) => {
+  const handleUpdateChanges = async (e: { preventDefault: VoidFunction }) => {
     e.preventDefault()
 
     // Checking if user's logged on

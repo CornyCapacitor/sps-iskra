@@ -15,7 +15,7 @@ export const errorSwal = (title: string) => {
   return
 }
 
-export const questionSwal = (title: string, confirmText: string, cancelText: string, resultFunc: () => void) => {
+export const questionSwal = (title: string, confirmText: string, cancelText: string, resultFunc: VoidFunction) => {
   Swal.fire({
     icon: 'question',
     iconColor: '#2563eb',
