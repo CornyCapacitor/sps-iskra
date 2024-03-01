@@ -4,11 +4,11 @@ import { spsIskraAuthAtom } from "@/state/atoms"
 import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-
 import { changeImage } from "../../utils/changeImage"
+import { createData } from "../../utils/createData"
 import { errorSwal, questionSwal, toAdminSuccessSwal } from "../../utils/swals"
+import { uploadImage } from "../../utils/uploadImage"
 
-import supabase from "@/app/config/supabaseClient"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -16,75 +16,24 @@ const Page = () => {
   const [user] = useAtom(spsIskraAuthAtom)
   const router = useRouter()
 
-  // News parameters
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
 
-  // States for displaying and updating* the news image
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
 
-  // Handler for create news and upload news image
   const handleCreateNews = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
-    // Checking if user's logged on
-    if (!user) {
-      errorSwal("Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.")
-    }
+    if (!user) { errorSwal("Nie zidentyfikowano użytkownika. Zaloguj się ponownie i spróbuj jeszcze raz.") }
 
-    // Checking if inputs are not empty
-    if (!title || !description) {
-      errorSwal("Nie wypełniłeś właściwych pól poprawnie.")
-    }
+    if (!title || !description) { errorSwal("Nie wypełniłeś właściwych pól poprawnie.") }
 
-    // Checking if user wants to create news without image attached
-    if (title && description && !file) {
-      questionSwal("Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?", "Tak", "Nie", createNews)
+    if (title && description && !file) { questionSwal("Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?", "Tak", "Nie", createNews) }
 
-      // Swal.fire({
-      //   icon: 'question',
-      //   iconColor: '#2563eb',
-      //   background: `${themeBackground}`,
-      //   color: `${themeColor}`,
-      //   title: "Czy na pewno nie chcesz załączać zdjęcia do tej aktualności?",
-      //   showConfirmButton: true,
-      //   confirmButtonText: "Tak",
-      //   showCancelButton: true,
-      //   cancelButtonText: "Nie",
-      // }).then((result) => {
-      //   if (result.isConfirmed) {
-      //     createNews()
-      //   }
-      //   return
-      // })
-    }
-
-    // If everything is attached, additional idiot-proof check
-    if (title && description && file) {
-      questionSwal("Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?", "Tak", "Nie", createNews)
-
-      //   Swal.fire({
-      //     icon: 'question',
-      //     iconColor: '#2563eb',
-      //     background: `${themeBackground}`,
-      //     color: `${themeColor}`,
-      //     title: "Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?",
-      //     showConfirmButton: true,
-      //     confirmButtonText: "Tak",
-      //     showCancelButton: true,
-      //     cancelButtonText: "Nie",
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       createNews()
-      //     }
-      //     return
-      //   })
-      // }
-    }
+    if (title && description && file) { questionSwal("Czy jesteś pewien, że wszystkie pola wypełniłeś poprawnie? Chcesz opublikować tworzoną aktualizację?", "Tak", "Nie", createNews) }
   }
 
-  // Creating news based on user changes
   const createNews = () => {
     if (!user) return
 
@@ -93,94 +42,24 @@ const Page = () => {
 
     const updateValue = { id: uniqueId, title: title, description: description, who: user.user_metadata?.username, image: file ? true : false }
 
-    const updateData = async () => {
-      const { data } = await supabase
-        .from('aktualnosci')
-        .insert(updateValue)
-        .select()
+    const successCallback = () => {
+      toAdminSuccessSwal("Opublikowano nową aktualność pomyślnie.", () => router.push('/admin'))
+    }
 
-      if (data) {
-        toAdminSuccessSwal("Opublikowano nową aktualność pomyślnie.", () => { router.push('/admin') })
+    createData("aktualnosci", updateValue, successCallback)
 
-        // Swal.fire({
-        //   icon: 'success',
-        //   iconColor: 'green',
-        //   background: `${themeBackground}`,
-        //   color: `${themeColor}`,
-        //   title: "Opublikowano nową aktualność pomyślnie.",
-        //   showConfirmButton: true,
-        //   confirmButtonText: "Ok",
-        //   timer: 5000,
-        // }).then((result) => {
-        //   if (result.isConfirmed || result.dismiss) {
-        //     router.push('/admin')
-        //   }
-        // })
-
-      }
-
-      const updateImage = async () => {
-        if (!file || !user) return
-
-        const { data, error } = await supabase
-          .storage
-          .from('aktualnosci')
-          .upload(`${uniqueId}`, file)
-
-        if (data) {
-          return data
-        }
-
-        if (error) {
-          console.error(error)
-        }
-      }
-
-      updateData()
-      updateImage()
+    if (file) {
+      uploadImage("aktualnosci", uniqueId, file)
     }
   }
 
-  // Rejecting all the changes
   const abortNews = () => {
     questionSwal("Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.", "Tak", "Nie", () => { router.push('/admin') })
-
-    // Swal.fire({
-    //   icon: 'question',
-    //   iconColor: '#2563eb',
-    //   background: `${themeBackground}`,
-    //   color: `${themeColor}`,
-    //   title: "Czy na pewno chcesz odrzucić wprowadzone zmiany? Jeśli tak, wprowadzone dane zostanę utracone.",
-    //   showConfirmButton: true,
-    //   confirmButtonText: "Tak",
-    //   showCancelButton: true,
-    //   cancelButtonText: "Nie",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     router.push('/admin')
-    //   }
-    // })
   }
 
-  // Setting file state as selected file from user's device
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeImage(e, setFile, setTempImageUrl)
   }
-
-  // const changeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0]
-  //   if (!file) return
-
-  //   setFile(file)
-
-  //   const reader = new FileReader()
-  //   reader.onload = (event) => {
-  //     if (event.target) {
-  //       setTempImageUrl(event.target.result as string)
-  //     }
-  //   }
-  //   reader.readAsDataURL(file)
-  // }
 
   if (user) {
     return (

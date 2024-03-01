@@ -1,7 +1,7 @@
 export const changeImage = (
   e: React.ChangeEvent<HTMLInputElement>,
   fileSetter: React.Dispatch<React.SetStateAction<File | null>>,
-  tempImageUrlSetter: React.Dispatch<React.SetStateAction<string | null>>
+  tempImageUrlSetter: React.Dispatch<React.SetStateAction<string | null>>,
 ) => {
   const file = e.target.files?.[0]
   if (!file) return
