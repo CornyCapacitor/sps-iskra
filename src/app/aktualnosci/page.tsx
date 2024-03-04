@@ -4,6 +4,7 @@ import { PageImage } from "@/components/PageImage"
 import { useEffect, useState } from "react"
 
 import AppCard from "@/components/AppCard"
+import Link from "next/link"
 import supabase from "../config/supabaseClient"
 
 const NewsPage = () => {
@@ -43,6 +44,9 @@ const NewsPage = () => {
             <AppCard key={news.id} {...news} type="aktualnosci" />
           ))}
         </section>
+        {news.length >= 10 && (
+          <Link href="/aktualnosci/historia" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">Zobacz więcej aktualności</Link>
+        )}
       </section>
     </main>
   )

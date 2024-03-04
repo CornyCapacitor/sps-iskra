@@ -4,6 +4,7 @@ import { PageImage } from "@/components/PageImage"
 import { useEffect, useState } from "react"
 
 import AppCard from "@/components/AppCard"
+import Link from "next/link"
 import supabase from "../config/supabaseClient"
 
 const CompetitionsPage = () => {
@@ -39,6 +40,9 @@ const CompetitionsPage = () => {
             <AppCard key={competitions.id} {...competitions} type="zawody" />
           ))}
         </section>
+        {competitions.length >= 10 && (
+          <Link href="/zawody/historia" className="w-[350px] p-3 rounded-md bg-gray-600 text-white hover:bg-gray-500 focus:outline-none text-center">Zobacz więcej komunikatów z zawodów</Link>
+        )}
       </section>
     </main>
   )
