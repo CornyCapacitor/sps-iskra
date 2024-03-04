@@ -22,7 +22,7 @@ const CompetitionsPage = () => {
           const dateB = new Date(b.created_at).getTime();
           return dateA - dateB
         })
-        setCompetitions(sortedData)
+        setCompetitions(sortedData.slice(0, 10))
       }
     }
 

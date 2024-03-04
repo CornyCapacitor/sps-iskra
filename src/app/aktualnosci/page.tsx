@@ -22,7 +22,7 @@ const NewsPage = () => {
           const dateB = new Date(b.created_at).getTime();
           return dateA - dateB
         })
-        setNews(sortedData)
+        setNews(sortedData.slice(0, 10))
       }
 
       if (error) {

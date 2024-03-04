@@ -15,12 +15,15 @@ const AdminPage = () => {
 
   const [news, setNews] = useState<News[]>([])
   const [showNews, setShowNews] = useState(false)
+
   const [competitions, setCompetitions] = useState<Competition[]>([])
   const [showCompetitions, setShowCompetitions] = useState(false)
+
   const [civilTrainings, setCivilTrainings] = useState<Training[]>([])
   const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
   const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
   const [showTrainings, setShowTrainings] = useState(false)
+
   const [helpers, setHelpers] = useState<Helper[]>([])
   const [showHelpers, setShowHelpers] = useState(false)
 
@@ -48,7 +51,7 @@ const AdminPage = () => {
         const dateB = new Date(b.created_at).getTime();
         return dateA - dateB
       })
-      setNews(sortedData)
+      setNews(sortedData.slice(0, 10))
       setShowNews(true)
     }
   }
@@ -65,7 +68,7 @@ const AdminPage = () => {
         const dateB = new Date(b.created_at).getTime();
         return dateA - dateB
       })
-      setCompetitions(sortedData)
+      setCompetitions(sortedData.slice(0, 10))
       setShowCompetitions(true)
     }
   }
