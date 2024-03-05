@@ -154,6 +154,7 @@ const Page = () => {
                 <option value="cywilne" className="text-black">Szkolenie dla osób cywilnych</option>
                 <option value="mundurowe" className="text-black">Szkolenie dla służb mundurowych</option>
                 <option value="proobronne" className="text-black">Szkolenie proobronne</option>
+                <option value="dlaczlonkow" className="text-black">Szkolenie dla członków stowarzyszenia</option>
               </select>
               <Image src={tempImageUrl || `/sps-iskra-logo.jpg`} alt="Zdjęcie szkolenia" width={350} height={350} className="rounded-lg" />
               <p>Wybierz inne zdjęcie klikając poniżej:</p>

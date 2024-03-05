@@ -22,6 +22,7 @@ const AdminPage = () => {
   const [civilTrainings, setCivilTrainings] = useState<Training[]>([])
   const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
   const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
+  const [memberTrainings, setMemberTrainings] = useState<Training[]>([])
   const [showTrainings, setShowTrainings] = useState(false)
 
   const [helpers, setHelpers] = useState<Helper[]>([])
@@ -82,9 +83,11 @@ const AdminPage = () => {
       const civilTrainingsData = data.filter(training => training.aspect === 'cywilne')
       const uniformedTrainingsData = data.filter(training => training.aspect === 'mundurowe')
       const proDefenseTrainingsData = data.filter(training => training.aspect === 'proobronne')
+      const memberTrainingsData = data.filter(training => training.aspect === 'dlaczlonkow')
       setCivilTrainings(civilTrainingsData)
       setUniformedTrainings(uniformedTrainingsData)
       setProDefenseTrainings(proDefenseTrainingsData)
+      setMemberTrainings(memberTrainingsData)
       setShowTrainings(true)
     }
   }
@@ -181,6 +184,13 @@ const AdminPage = () => {
                     ))}
                     <h2 className="w-full font-semibold">Szkolenia proobronne:</h2>
                     {proDefenseTrainings.map((training) => (
+                      <Link href="/szkolenia/[id]" as={`/admin/szkolenia/${training.id}`} key={training.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
+                        <p>{training.title}</p>
+                        <p>{getProperDate(training.created_at)} | {training.who}</p>
+                      </Link>
+                    ))}
+                    <h2 className="w-full font-semibold">Szkolenia dla członków stowarzyszenia</h2>
+                    {memberTrainings.map((training) => (
                       <Link href="/szkolenia/[id]" as={`/admin/szkolenia/${training.id}`} key={training.id} className="w-[350px] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none text-center cursor-pointer">
                         <p>{training.title}</p>
                         <p>{getProperDate(training.created_at)} | {training.who}</p>

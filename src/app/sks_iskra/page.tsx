@@ -54,7 +54,7 @@ const page = () => {
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
       <PageImage imageUrl={"/sks-iskra.jpg"} />
       <section className="flex flex-col gap-10 max-w-[800px] mx-auto p-10 min-h-[500px] text-justify">
-        <h1 className="text-3xl text-center">Sportowy Klub Strzelecki &#x201E;SKS ISKRA&#x201D;</h1>
+        <h1 className="text-3xl text-center">Sportowy Klub Strzelecki &#x201E;ISKRA&#x201D;</h1>
         <p>Działalność klubu opiera się na przepisach PZSS odnośnie zawodów strzeleckich oraz praktykuje wojskowe zasady oparte na PSBS podczas treningów strzeleckich.</p>
         <h2 className="text-2xl text-center">Klub ogranizuje zajęcia takie jak:</h2>
         <ul className="list-disc">

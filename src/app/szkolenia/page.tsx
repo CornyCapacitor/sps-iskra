@@ -11,6 +11,7 @@ const TrainingsPage = () => {
   const [civilTrainings, setCivilTrainings] = useState<Training[]>([])
   const [uniformedTrainings, setUniformedTrainings] = useState<Training[]>([])
   const [proDefenseTrainings, setProDefenseTrainings] = useState<Training[]>([])
+  const [memberTrainings, setMemberTrainings] = useState<Training[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,9 +23,11 @@ const TrainingsPage = () => {
         const civilTrainingsData = data.filter(training => training.aspect === 'cywilne')
         const uniformedTrainingsData = data.filter(training => training.aspect === 'mundurowe')
         const proDefenseTrainingsData = data.filter(training => training.aspect === 'proobronne')
+        const memberTrainingsData = data.filter(training => training.aspect === 'dlaczlonkow')
         setCivilTrainings(civilTrainingsData)
         setUniformedTrainings(uniformedTrainingsData)
         setProDefenseTrainings(proDefenseTrainingsData)
+        setMemberTrainings(memberTrainingsData)
       }
     }
 
@@ -56,6 +59,15 @@ const TrainingsPage = () => {
         <h1 className="text-3xl">Szkolenia proobronne</h1>
         <section className="flex flex-wrap gap-5 items-start justify-center p-10">
           {proDefenseTrainings.map((training) => (
+            <AppCard key={training.id} {...training} type="szkolenia" />
+          ))}
+        </section>
+      </section>
+      <SectionSeparator />
+      <section className="flex flex-col gap-5 items-center justify-start p-10 min-h-[500px]">
+        <h1 className="text-3xl">Szkolenia dla członków stowarzyszenia</h1>
+        <section className="flex flex-wrap gap-5 items-start justify-center p-10">
+          {memberTrainings.map((training) => (
             <AppCard key={training.id} {...training} type="szkolenia" />
           ))}
         </section>
