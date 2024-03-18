@@ -54,7 +54,7 @@ const Page = () => {
     <main className="flex-col w-full items-center justify-center text-center max-w-full overflow-x-hidden">
       <PageImage imageUrl={"/about.jpg"} />
       <section className="flex flex-col gap-10 max-w-[800px] mx-auto p-10 min-h-[500px] text-justify">
-        <h1 className="text-3xl text-center">Stowarzyszenie Proobronno-Szkoleniowe &#x201E;ISKRA&#x201D;</h1>
+        <h1 className="text-3xl text-center">Stowarzyszenie Proobronno-Szkoleniowe ISKRA</h1>
         <p>Stowarzyszenie Proobronno-Szkoleniowe ISKRA zajmuje się propagowaniem strzelectwa, w tym strzelectwa sportowego oraz kolekcjonerstwa broni i amunicji zgodnie z przepisami Ustawy o broni i amunicji z dnia 21 maja 1999 r. Realizujemy swoje cele poprzez szkolenia, edukację dzieci, młodzieży i dorosłych, oraz działania na rzecz obronności państwa i bezpieczeństwa publicznego. Ponadto angażujemy się w ochronę dziedzictwa narodowego, promowanie kultury fizycznej oraz działania wspomagające rozwój społeczności lokalnych.</p>
         <h2 className="text-2xl text-center">Nasza działalność</h2>
         <p>Organizujemy różnorodne programy szkoleń, ćwiczeń, kursów, zawodów [+jakich zawodów] oraz konferencji i seminariów. Współpracujemy z organami administracji publicznej, jednostkami wojskowymi i innymi podmiotami w celu efektywnego realizowania celów stowarzyszenia. Nasze szkolenia są prowadzone przez wykwalifikowanych instruktorów, z poszanowaniem obowiązujących przepisów prawa z zakresu bezpieczeństwa i porządku publicznego.</p>
