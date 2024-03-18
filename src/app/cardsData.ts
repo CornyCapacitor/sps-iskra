@@ -31,7 +31,7 @@ export const cardsData = [
   },
   {
     title: "Szkolenia dla służb mundurowych",
-    description: "Chcesz rozwijać się z wiedzy specjalistycznej? Pomożemy Ci zwiększyć swoje kwalifikacje.",
+    description: "Chcesz pogłębiać swoją wiedzę oraz umiejętności specjalistyczne?",
     image: "trainings.jpg",
     path: "szkolenia",
   },
@@ -42,8 +42,8 @@ export const cardsData = [
     path: "zawody",
   },
   {
-    title: "Sportowy Klub Strzelecki Iskra SKS Iskra",
-    description: "Chciałbyś wziąć udział w zawodach lub zrobić pozwolenia na broń sportową i kolekcjonerską? Dołącz do naszego klubu.",
+    title: "Sportowy Klub Strzlecki ISKRA",
+    description: "Chciałbyś wziąć udział w zawodach lub ubiegać się o pozwolenie na broń sportową i/lub kolekcjonerską? Dołącz do naszego klubu.",
     image: "sks-iskra.jpg",
     path: "sks_iskra",
   },

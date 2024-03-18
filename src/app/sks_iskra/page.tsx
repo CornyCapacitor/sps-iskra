@@ -55,20 +55,20 @@ const page = () => {
       <PageImage imageUrl={"/sks-iskra.jpg"} />
       <section className="flex flex-col gap-10 max-w-[800px] mx-auto p-10 min-h-[500px] text-justify">
         <h1 className="text-3xl text-center">Sportowy Klub Strzelecki &#x201E;ISKRA&#x201D;</h1>
-        <p>Działalność klubu opiera się na przepisach PZSS odnośnie zawodów strzeleckich oraz praktykuje wojskowe zasady oparte na PSBS podczas treningów strzeleckich.</p>
+        <p>Działalność klubu opiera się na przepisach Polskiego Związku Strzelectwa Sportowego dotyczących zawodów strzeleckich oraz praktykuje wojskowe zasady oparte na Programie Strzelań z Broni Strzeleckiej podczas treningów strzeleckich.</p>
         <h2 className="text-2xl text-center">Klub ogranizuje zajęcia takie jak:</h2>
         <ul className="list-disc">
-          <li>Treningi strzeleckie</li>
-          <li>Przygotowanie do egzaminu na Patent strzelecki PZSS</li>
-          <li>Przygotowanie do egzaminu na Prowadzącego strzelanie PZSS</li>
-          <li>Przygotowanie do egzaminu na sędziego PZSS</li>
-          <li>Zawody Strzeleckie wewnątrzklubowe.</li>
+          <li>Treningi strzeleckie;</li>
+          <li>Przygotowanie do egzaminu na Patent strzelecki PZSS;</li>
+          <li>Przygotowanie do egzaminu na Prowadzącego strzelanie PZSS;</li>
+          <li>Przygotowanie do egzaminu na sędziego PZSS;</li>
+          <li>Zawody Strzeleckie wewnątrzklubowe;</li>
           <li>Zawody Strzeleckie zewnętrzne.</li>
         </ul>
-        <p className="self-center">Kliknij w obrazek poniżej w celu pobrania deklaracji członkowskiej klubu strzleckiego:</p>
-        <Image src="/document.svg" alt="File download icon" width={80} height={80} className="self-center border border-black rounded-full p-2 hover:cursor-pointer hover:shadow-2xl transition-[0.2s]" onClick={() => handleDocumentClick("deklaracja")} />
+        <p className="self-center">Kliknij w obrazek poniżej w celu pobrania deklaracji członkowskiej klubu strzeleckiego:</p>
+        <Image src="/document.svg" alt="File download icon" width={80} height={80} className="animate-bounce self-center border border-black rounded-full p-2 hover:cursor-pointer hover:shadow-2xl transition-[0.2s]" onClick={() => handleDocumentClick("deklaracja")} />
         <p className="self-center">Kliknij w obrazek poniżej w celu pobrania regulaminu klubu strzeleckiego:</p>
-        <Image src="/document.svg" alt="File download icon" width={80} height={80} className="self-center border border-black rounded-full p-2 hover:cursor-pointer hover:shadow-2xl transition-[0.2s]" onClick={() => handleDocumentClick("regulamin")} />
+        <Image src="/document.svg" alt="File download icon" width={80} height={80} className="animate-bounce self-center border border-black rounded-full p-2 hover:cursor-pointer hover:shadow-2xl transition-[0.2s]" onClick={() => handleDocumentClick("regulamin")} />
       </section>
     </main>
   )
